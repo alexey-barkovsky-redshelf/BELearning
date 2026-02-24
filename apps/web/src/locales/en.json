@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "cart": "Cart",
+    "favorites": "Favorites",
+    "profile": "Profile"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet.",
+    "clearAll": "Clear all",
+    "remove": "Remove"
+  },
+  "dashboard": {
+    "title": "Home",
+    "searchPlaceholder": "Search products…",
+    "tiles": {
+      "allDesc": "All products",
+      "healthDesc": "Wellness and self-care",
+      "sportDesc": "Fitness and active lifestyle",
+      "hobbyDesc": "Creative and leisure",
+      "promotionsDesc": "Special offers",
+      "for_menDesc": "Curated for him",
+      "for_womenDesc": "Curated for her",
+      "for_childrenDesc": "Kids and family",
+      "foodDesc": "Nutrition and recipes",
+      "booksDesc": "Reading and learning",
+      "categoryDesc": "Products in this category"
+    }
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "inCart": "In cart",
+    "toCatalog": "Home",
+    "checkout": "Checkout",
+    "added": "Added",
+    "goToCart": "Go to cart",
+    "clearCart": "Clear cart"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "loginRequired": "Log in to continue.",
+    "login": "Log in",
+    "submit": "Place order"
+  },
+  "login": {
+    "title": "Log in",
+    "signIn": "Log in",
+    "signUp": "Sign up",
+    "signUpHint": "Choose a User ID to use. You can use any identifier (e.g. email or nickname).",
+    "userIdLabel": "User ID",
+    "userIdPlaceholder": "Enter your User ID",
+    "submit": "Log in",
+    "submitSignUp": "Create",
+    "errorRequired": "User ID is required."
+  },
+  "profile": {
+    "title": "Profile",
+    "notLoggedIn": "You are not logged in.",
+    "userIdLabel": "User ID",
+    "login": "Show my orders",
+    "myOrders": "My orders",
+    "thanks": "Order placed. Your order will be delivered.",
+    "preferences": "Preferences",
+    "language": "Language",
+    "currency": "Currency"
+  },
+  "categories": {
+    "all": "All",
+    "health": "Health",
+    "sport": "Sport",
+    "hobby": "Hobby",
+    "promotions": "Promotions",
+    "for_men": "For men",
+    "for_women": "For women",
+    "for_children": "For children",
+    "food": "Food",
+    "books": "Books"
+  },
+  "products": {
+    "title": "Products",
+    "loading": "Loading…",
+    "backToCatalog": "← Home",
+    "backToCatalogLink": "Home",
+    "addToOrder": "Add to order",
+    "buy": "Buy",
+    "manufacturer": "Manufacturer",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites"
+  },
+  "productDetail": {
+    "notFound": "Product not found",
+    "notFoundShort": "Not found"
+  },
+  "orders": {
+    "title": "Orders",
+    "userIdLabel": "User ID (for demo):",
+    "loadOrders": "Load my orders",
+    "createNew": "Create a new order",
+    "empty": "No orders yet.",
+    "orderId": "Order {{id}}…",
+    "itemsCount": "{{count}} item(s)",
+    "markPaid": "Mark paid",
+    "markPaidProgress": "…",
+    "backToOrders": "← Orders"
+  },
+  "orderCreate": {
+    "title": "Create order",
+    "userId": "User ID",
+    "productsHeading": "Products",
+    "cartHeading": "Cart",
+    "total": "Total:",
+    "add": "Add",
+    "remove": "Remove",
+    "submit": "Create order",
+    "submitting": "Creating…"
+  },
+  "common": {
+    "loading": "Loading…",
+    "userIdPlaceholder": "e.g. user-1"
+  },
+  "errors": {
+    "loadFailed": "Failed to load",
+    "markPaidFailed": "Failed to mark paid",
+    "createOrderFailed": "Failed to create order",
+    "enterUserId": "Enter User ID",
+    "addOneProduct": "Add at least one product"
+  },
+  "status": {
+    "draft": "draft",
+    "paid": "paid",
+    "cancelled": "cancelled",
+    "_": "—"
+  }
+}

@@ -1,0 +1,74 @@
+/**
+ * Design system tokens
+ * Светло, тонко, синевато — без стерильности.
+ */
+:root {
+  /* Colors — base (лёгкий тёплый фон) */
+  --color-white: #ffffff;
+  --color-bg: #f6f8fc;
+  --color-surface: #ffffff;
+  /* Borders — тонкие, синеватые */
+  --color-border: #c5d4eb;
+  --color-border-subtle: #dce5f2;
+  --color-border-focus: #93b5e0;
+
+  /* Colors — text */
+  --color-text: #374151;
+  --color-text-muted: #6b7280;
+  --color-text-faint: #9ca3af;
+
+  /* Colors — accent (calm blue) */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-muted: #eff6ff;
+  --color-accent-text: #1d4ed8;
+
+  /* Colors — semantic */
+  --color-success-bg: #f0fdf4;
+  --color-success-text: #166534;
+  --color-error-bg: #fef2f2;
+  --color-error-text: #b91c1c;
+  --color-warning-bg: #fffbeb;
+  --color-warning-text: #b45309;
+
+  /* Typography — крупнее для читаемости и акцентов */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.8125rem;
+  --font-size-sm: 0.9375rem;
+  --font-size-base: 1.0625rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2rem;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --line-height-tight: 1.35;
+  --line-height-normal: 1.5;
+
+  /* Spacing — крупные отступы (4px base) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Border — тонкая линия */
+  --border-width: 1px;
+  --border-color: var(--color-border);
+  --outline-width: 1px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Shadow — very subtle */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+}

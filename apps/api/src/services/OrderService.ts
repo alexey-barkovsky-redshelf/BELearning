@@ -1,0 +1,64 @@
+import type { Order as IOrder } from '@belearning/shared';
+import { Order } from '../domain/Order.js';
+import { UserProductAccess } from '../domain/UserProductAccess.js';
+import type { IOrderRepository } from '../repositories/interfaces/IOrderRepository.js';
+import type { IUserProductAccessRepository } from '../repositories/interfaces/IUserProductAccessRepository.js';
+
+export class OrderService {
+  constructor(
+    private readonly orderRepository: IOrderRepository,
+    private readonly accessRepository: IUserProductAccessRepository
+  ) {}
+
+  async create(
+    userId: string,
+    items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>,
+    currency?: string
+  ): Promise<IOrder> {
+    const now = new Date().toISOString();
+    const order = Order.create({
+      id: crypto.randomUUID(),
+      userId,
+      items,
+      currency: currency ?? 'USD',
+      createdAt: now,
+      updatedAt: now,
+    });
+    await this.orderRepository.save(order);
+    return order.toJSON();
+  }
+
+  async getById(id: string): Promise<IOrder | null> {
+    const order = await this.orderRepository.findById(id);
+    return order?.toJSON() ?? null;
+  }
+
+  async getByUserId(userId: string): Promise<IOrder[]> {
+    const orders = await this.orderRepository.findByUserId(userId);
+    return orders.map((o) => {
+      return o.toJSON();
+    });
+  }
+
+  async markPaid(orderId: string): Promise<IOrder | null> {
+    const order = await this.orderRepository.findById(orderId);
+    if (!order) {
+      return null;
+    }
+    order.markPaid();
+    await this.orderRepository.save(order);
+
+    const now = new Date().toISOString();
+    for (const item of order.items) {
+      const access = UserProductAccess.create({
+        userId: order.userId,
+        productId: item.productId,
+        grantedAt: now,
+        sourceOrderId: order.id,
+      });
+      await this.accessRepository.save(access);
+    }
+
+    return order.toJSON();
+  }
+}
