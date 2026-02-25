@@ -10,6 +10,7 @@ export class OrderService {
     private readonly accessRepository: IUserProductAccessRepository
   ) {}
 
+  /** Default currency is USD when not provided; same default as Order.create in domain. */
   async create(
     userId: string,
     items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>,
@@ -35,9 +36,7 @@ export class OrderService {
 
   async getByUserId(userId: string): Promise<IOrder[]> {
     const orders = await this.orderRepository.findByUserId(userId);
-    return orders.map((o) => {
-      return o.toJSON();
-    });
+    return orders.map((o) => o.toJSON());
   }
 
   async markPaid(orderId: string): Promise<IOrder | null> {

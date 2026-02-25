@@ -3,17 +3,9 @@ import { ProductController } from '../controllers/ProductController.js';
 
 export function createProductRoutes(controller: ProductController): Router {
   const router = Router();
-  router.get('/', (req, res) => {
-    controller.list(req, res);
-  });
-  router.get('/slug/:slug', (req, res) => {
-    controller.getBySlug(req, res);
-  });
-  router.get('/:id', (req, res) => {
-    controller.getById(req, res);
-  });
-  router.post('/', (req, res) => {
-    controller.create(req, res);
-  });
+  router.get('/', controller.list.bind(controller));
+  router.get('/slug/:slug', controller.getBySlug.bind(controller));
+  router.get('/:id', controller.getById.bind(controller));
+  router.post('/', (req, res, next) => controller.create(req, res).catch(next));
   return router;
 }

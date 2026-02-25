@@ -1,16 +1,12 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 const UserContext = createContext<{ userId: string; setUserId: (v: string) => void; isLoggedIn: boolean } | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [userId, setUserIdState] = useState('');
-
-  const setUserId = useCallback((v: string) => {
-    setUserIdState(v);
-  }, []);
-
+  const [userId, setUserId] = useState('');
+  const isLoggedIn = userId.trim().length > 0;
   return (
-    <UserContext.Provider value={{ userId, setUserId, isLoggedIn: userId.trim().length > 0 }}>
+    <UserContext.Provider value={{ userId, setUserId, isLoggedIn }}>
       {children}
     </UserContext.Provider>
   );

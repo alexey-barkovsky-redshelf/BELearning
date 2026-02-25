@@ -1,20 +1,71 @@
 import { useSearchParams } from 'react-router-dom';
-import { api } from '../api/client';
+import { api, type Order } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation, useLocale } from '../context/LocaleContext';
-import { useCurrency, CURRENCY_OPTIONS } from '../context/CurrencyContext';
+import { useCurrency, CURRENCY_OPTIONS, type CurrencyCode } from '../context/CurrencyContext';
 import { useAsync } from '../hooks/useAsync';
+import { getStatusLabel } from '../utils/status';
 
-type Order = {
-  id: string;
-  userId: string;
-  status: string;
-  totalAmount: number;
-  currency: string;
-  items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>;
-  createdAt: string;
-  updatedAt: string;
-};
+type Lang = 'en' | 'ru';
+
+function PreferencesSection({
+  t,
+  lang,
+  setLang,
+  currency,
+  setCurrency,
+  idSuffix,
+}: {
+  t: (key: string) => string;
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  currency: CurrencyCode;
+  setCurrency: (c: CurrencyCode) => void;
+  idSuffix: '' | '-guest';
+}) {
+  const langId = `profile-lang${idSuffix}`;
+  const currencyId = `profile-currency${idSuffix}`;
+  return (
+    <section className="profile-section profile-preferences">
+      <h2>{t('profile.preferences')}</h2>
+      <div className="profile-pref-row">
+        <label htmlFor={langId}>{t('profile.language')}</label>
+        <select
+          id={langId}
+          value={lang}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === 'en' || v === 'ru') {
+              setLang(v);
+            }
+          }}
+        >
+          <option value="en">English</option>
+          <option value="ru">Русский</option>
+        </select>
+      </div>
+      <div className="profile-pref-row">
+        <label htmlFor={currencyId}>{t('profile.currency')}</label>
+        <select
+          id={currencyId}
+          value={currency}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (CURRENCY_OPTIONS.some((o) => o.value === v)) {
+              setCurrency(v as CurrencyCode);
+            }
+          }}
+        >
+          {CURRENCY_OPTIONS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </section>
+  );
+}
 
 export function Profile() {
   const { t } = useTranslation();
@@ -26,7 +77,7 @@ export function Profile() {
   const { data: orders = [], loading: loadingOrders, error: errorOrders } = useAsync<Order[]>(
     () => api.getOrdersByUser(userId),
     [userId, isLoggedIn],
-    { enabled: isLoggedIn, onError: () => { return t('errors.loadFailed'); } }
+    { enabled: isLoggedIn, onError: () => t('errors.loadFailed') }
   );
 
   if (!isLoggedIn) {
@@ -34,44 +85,7 @@ export function Profile() {
       <div className="page">
         <h1>{t('profile.title')}</h1>
         <p className="profile-not-logged-in">{t('profile.notLoggedIn')}</p>
-        <section className="profile-section profile-preferences">
-          <h2>{t('profile.preferences')}</h2>
-          <div className="profile-pref-row">
-            <label htmlFor="profile-lang-guest">{t('profile.language')}</label>
-            <select
-              id="profile-lang-guest"
-              value={lang}
-              onChange={(e) => {
-                const v = e.target.value;
-                if (v === 'en' || v === 'ru') {
-                  setLang(v);
-                }
-              }}
-            >
-              <option value="en">English</option>
-              <option value="ru">Русский</option>
-            </select>
-          </div>
-          <div className="profile-pref-row">
-            <label htmlFor="profile-currency-guest">{t('profile.currency')}</label>
-            <select
-              id="profile-currency-guest"
-              value={currency}
-              onChange={(e) => {
-                const v = e.target.value;
-                if (CURRENCY_OPTIONS.some((o) => o.value === v)) {
-                  setCurrency(v as (typeof CURRENCY_OPTIONS)[number]['value']);
-                }
-              }}
-            >
-              {CURRENCY_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </section>
+        <PreferencesSection t={t} lang={lang} setLang={setLang} currency={currency} setCurrency={setCurrency} idSuffix="-guest" />
       </div>
     );
   }
@@ -80,45 +94,7 @@ export function Profile() {
     <div className="page">
       <h1>{t('profile.title')}</h1>
       {thanks ? <p className="profile-thanks">{t('profile.thanks')}</p> : null}
-
-      <section className="profile-section profile-preferences">
-        <h2>{t('profile.preferences')}</h2>
-        <div className="profile-pref-row">
-          <label htmlFor="profile-lang">{t('profile.language')}</label>
-          <select
-            id="profile-lang"
-            value={lang}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (v === 'en' || v === 'ru') {
-                setLang(v);
-              }
-            }}
-          >
-            <option value="en">English</option>
-            <option value="ru">Русский</option>
-          </select>
-        </div>
-        <div className="profile-pref-row">
-          <label htmlFor="profile-currency">{t('profile.currency')}</label>
-          <select
-            id="profile-currency"
-            value={currency}
-            onChange={(e) => {
-              const v = e.target.value;
-              if (CURRENCY_OPTIONS.some((o) => o.value === v)) {
-                setCurrency(v as (typeof CURRENCY_OPTIONS)[number]['value']);
-              }
-            }}
-          >
-            {CURRENCY_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
+      <PreferencesSection t={t} lang={lang} setLang={setLang} currency={currency} setCurrency={setCurrency} idSuffix="" />
 
       <section className="profile-section">
         <h2>{t('profile.myOrders')}</h2>
@@ -132,7 +108,7 @@ export function Profile() {
                 <div className="order-header">
                   <span>{t('orders.orderId', { id: o.id.slice(0, 8) })}</span>
                   <span className={`status status-${o.status}`}>
-                    {(() => { const k = `status.${o.status}`; const label = t(k); return label === k ? o.status : label; })()}
+                    {getStatusLabel(o.status, t)}
                   </span>
                 </div>
                 <p>

@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+function getErrorMessage(e: unknown, custom?: (e: unknown) => string): string {
+  return custom?.(e) ?? (e instanceof Error ? e.message : 'Request failed');
+}
+
 /**
- * Хук для запроса по зависимостям: при смене deps вызывается fn(), результат в data/loading/error.
- * Удобно для «загрузить при монтировании / при смене userId» и т.п.
+ * Hook for request by deps: when deps change, fn() runs; result in data/loading/error.
+ * Use for "load on mount / on userId change" etc.
+ *
+ * When to use which:
+ * - useAsync: load data when deps change (e.g. mount, userId). Use refetch() to reload.
+ * - useAsyncRequest: run an action on demand (e.g. submit form, button click).
  */
 export function useAsync<T>(
   fn: () => Promise<T>,
@@ -34,8 +42,7 @@ export function useAsync<T>(
       })
       .catch((e) => {
         if (!cancelled) {
-          const message = options?.onError?.(e) ?? (e instanceof Error ? e.message : 'Request failed');
-          setError(message);
+          setError(getErrorMessage(e, options?.onError));
         }
       })
       .finally(() => {
@@ -57,8 +64,7 @@ export function useAsync<T>(
     fnRef.current()
       .then(setData)
       .catch((e) => {
-        const message = options?.onError?.(e) ?? (e instanceof Error ? e.message : 'Request failed');
-        setError(message);
+        setError(getErrorMessage(e, options?.onError));
       })
       .finally(() => setLoading(false));
   }, [enabled, ...deps]);

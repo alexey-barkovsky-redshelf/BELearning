@@ -15,6 +15,11 @@ export function Login() {
   const [touched, setTouched] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
+  const resetValidation = () => {
+    setSubmitAttempted(false);
+    setTouched(false);
+  };
+
   const trimmed = userIdValue.trim();
   const errorRequired = trimmed.length === 0;
   const showError = (touched || submitAttempted) && errorRequired;
@@ -39,22 +44,20 @@ export function Login() {
         <div className="login-tabs">
           <button
             type="button"
-            className={mode === 'signin' ? 'login-tab active' : 'login-tab'}
+            className={`login-tab ${mode === 'signin' ? 'active' : ''}`}
             onClick={() => {
               setMode('signin');
-              setSubmitAttempted(false);
-              setTouched(false);
+              resetValidation();
             }}
           >
             {t('login.signIn')}
           </button>
           <button
             type="button"
-            className={mode === 'signup' ? 'login-tab active' : 'login-tab'}
+            className={`login-tab ${mode === 'signup' ? 'active' : ''}`}
             onClick={() => {
               setMode('signup');
-              setSubmitAttempted(false);
-              setTouched(false);
+              resetValidation();
             }}
           >
             {t('login.signUp')}
@@ -73,9 +76,7 @@ export function Login() {
               value={userIdValue}
               onChange={(e) => {
                 setUserIdValue(e.target.value);
-                if (touched || submitAttempted) {
-                  setTouched(true);
-                }
+                setTouched(true);
               }}
               onBlur={() => {
                 setTouched(true);

@@ -22,9 +22,7 @@ export class Order {
   }
 
   get totalAmount(): number {
-    return this._items.reduce((sum, item) => {
-      return sum + item.getLineTotal();
-    }, 0);
+    return this._items.reduce((sum, item) => sum + item.getLineTotal(), 0);
   }
 
   get currency(): string {
@@ -43,9 +41,9 @@ export class Order {
       throw new InvalidOrderError('Order userId is required.');
     }
     const currency = params.currency ?? 'USD';
-    const items = params.items.map((i) => {
-      return OrderItem.create(i.productId, i.productTitle, i.priceAtPurchase, i.quantity);
-    });
+    const items = params.items.map((i) =>
+      OrderItem.create(i.productId, i.productTitle, i.priceAtPurchase, i.quantity)
+    );
     if (items.length === 0) {
       throw new InvalidOrderError('Order must have at least one item.');
     }
@@ -53,9 +51,9 @@ export class Order {
   }
 
   static fromPlain(data: IOrder): Order {
-    const items = data.items.map((i: IOrderItem) => {
-      return OrderItem.create(i.productId, i.productTitle, i.priceAtPurchase, i.quantity);
-    });
+    const items = data.items.map((i: IOrderItem) =>
+      OrderItem.create(i.productId, i.productTitle, i.priceAtPurchase, i.quantity)
+    );
     return new Order(
       data.id,
       data.userId,
@@ -74,12 +72,14 @@ export class Order {
       status: this._status,
       totalAmount: this.totalAmount,
       currency: this._currency,
-      items: this._items.map((i) => {
-        return i.toJSON();
-      }),
+      items: this._items.map((i) => i.toJSON()),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
+  }
+
+  private setStatus(s: IOrderStatus): void {
+    (this as unknown as { _status: IOrderStatus })._status = s;
   }
 
   markPaid(): void {
@@ -89,13 +89,13 @@ export class Order {
     if (this._status === 'cancelled') {
       throw new InvalidOrderError('Cannot pay a cancelled order.');
     }
-    (this as unknown as { _status: IOrderStatus })._status = 'paid';
+    this.setStatus('paid');
   }
 
   cancel(): void {
     if (this._status === 'paid') {
       throw new InvalidOrderError('Cannot cancel a paid order.');
     }
-    (this as unknown as { _status: IOrderStatus })._status = 'cancelled';
+    this.setStatus('cancelled');
   }
 }

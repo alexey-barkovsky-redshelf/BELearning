@@ -1,55 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../api/client';
+import { api, type Order } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';
-
-type Order = {
-  id: string;
-  userId: string;
-  status: string;
-  totalAmount: number;
-  currency: string;
-  items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>;
-  createdAt: string;
-  updatedAt: string;
-};
+import { useAsync } from '../hooks/useAsync';
+import { getStatusLabel } from '../utils/status';
 
 export function OrderList() {
   const { t } = useTranslation();
   const { userId, setUserId } = useUser();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [payingId, setPayingId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
-  const loadOrders = () => {
-    if (!userId.trim()) {
-      setOrders([]);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    api
-      .getOrdersByUser(userId)
-      .then(setOrders)
-      .catch((e) => {
-        setError(e instanceof Error ? e.message : t('errors.loadFailed'));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const { data: orders = [], loading, error, refetch } = useAsync<Order[]>(
+    () => api.getOrdersByUser(userId),
+    [userId],
+    { enabled: !!userId.trim(), onError: (e) => (e instanceof Error ? e.message : t('errors.loadFailed')) }
+  );
 
   const handleMarkPaid = (orderId: string) => {
+    setActionError(null);
     setPayingId(orderId);
     api
       .markOrderPaid(orderId)
-      .then(() => {
-        loadOrders();
-      })
+      .then(() => refetch())
       .catch((e) => {
-        setError(e instanceof Error ? e.message : t('errors.markPaidFailed'));
+        setActionError(e instanceof Error ? e.message : t('errors.markPaidFailed'));
       })
       .finally(() => {
         setPayingId(null);
@@ -71,7 +47,7 @@ export function OrderList() {
             placeholder={t('common.userIdPlaceholder')}
           />
         </label>
-        <button type="button" className="button" onClick={loadOrders} disabled={!userId.trim()}>
+        <button type="button" className="button" onClick={refetch} disabled={!userId.trim()}>
           {t('orders.loadOrders')}
         </button>
       </div>
@@ -80,16 +56,18 @@ export function OrderList() {
       </p>
 
       {error ? <p className="error">{error}</p> : null}
+      {actionError ? <p className="error">{actionError}</p> : null}
       {loading ? <p className="loading">{t('common.loading')}</p> : null}
       {!loading && !error && orders.length === 0 && userId ? <p>{t('orders.empty')}</p> : null}
       {!loading && orders.length > 0 ? (
         <ul className="order-list">
-          {orders.map((o) => {
-            return (
+          {orders.map((o) => (
               <li key={o.id} className="order-card">
                 <div className="order-header">
                   <span>{t('orders.orderId', { id: o.id.slice(0, 8) })}</span>
-                  <span className={`status status-${o.status}`}>{(() => { const k = `status.${o.status}`; const label = t(k); return label === k ? o.status : label; })()}</span>
+                  <span className={`status status-${o.status}`}>
+                    {getStatusLabel(o.status, t)}
+                  </span>
                 </div>
                 <p>
                   {o.totalAmount} {o.currency} · {t('orders.itemsCount', { count: o.items.length })}
@@ -107,8 +85,7 @@ export function OrderList() {
                   </button>
                 ) : null}
               </li>
-            );
-          })}
+          ))}
         </ul>
       ) : null}
     </div>

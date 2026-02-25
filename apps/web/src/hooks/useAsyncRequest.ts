@@ -1,5 +1,9 @@
 import { useCallback, useState } from 'react';
 
+function getErrorMessage(e: unknown, custom?: (e: unknown) => string): string {
+  return custom?.(e) ?? (e instanceof Error ? e.message : 'Request failed');
+}
+
 export function useAsyncRequest<T>() {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
@@ -13,8 +17,7 @@ export function useAsyncRequest<T>() {
       setData(result);
       return result;
     } catch (e) {
-      const message = options?.onError?.(e) ?? (e instanceof Error ? e.message : 'Request failed');
-      setError(message);
+      setError(getErrorMessage(e, options?.onError));
     } finally {
       setLoading(false);
     }

@@ -10,7 +10,6 @@ export function Layout() {
   const { totalCount } = useCart();
   const { favoriteIds } = useFavorites();
   const { userId } = useUser();
-  const favoriteCount = favoriteIds.length;
   return (
     <div className="layout">
       <header className="header">
@@ -18,19 +17,19 @@ export function Layout() {
           {APP_NAME}
         </Link>
         <nav className="nav">
-          <NavLink to="/" end className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+          <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             {t('nav.home')}
           </NavLink>
           <NavLink
             to="/favorites"
-            className={({ isActive }) => (isActive ? 'nav-link active nav-favorites' : 'nav-link nav-favorites')}
+            className={({ isActive }) => `nav-link nav-favorites ${isActive ? 'active' : ''}`}
           >
             {t('nav.favorites')}
-            {favoriteCount > 0 ? <span className="favorites-badge">{favoriteCount}</span> : null}
+            {favoriteIds.length > 0 ? <span className="favorites-badge">{favoriteIds.length}</span> : null}
           </NavLink>
           <NavLink
             to="/cart"
-            className={({ isActive }) => (isActive ? 'nav-link active nav-cart' : 'nav-link nav-cart')}
+            className={({ isActive }) => `nav-link nav-cart ${isActive ? 'active' : ''}`}
           >
             {t('nav.cart')}
             {totalCount > 0 ? <span className="cart-badge">{totalCount}</span> : null}

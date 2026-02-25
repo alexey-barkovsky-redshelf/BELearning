@@ -3,27 +3,26 @@ import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useCart } from '../context/CartContext';
-import { useCurrency } from '../context/CurrencyContext';
 import { useTranslation } from '../context/LocaleContext';
+import { PageShell } from '../components/PageShell';
+import { EmptyState } from '../components/EmptyState';
+import { formatMoney } from '../utils/format';
 
 export function Checkout() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { currency } = useCurrency();
   const { userId, isLoggedIn } = useUser();
   const { items, clear, totalSum } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { sum } = totalSum();
+  const { sum, currency } = totalSum();
 
   if (items.length === 0 && !submitting) {
     return (
-      <div className="page">
-        <h1>{t('checkout.title')}</h1>
-        <p>{t('cart.empty')}</p>
-        <Link to="/" className="button">{t('cart.toCatalog')}</Link>
-      </div>
+      <PageShell title={t('checkout.title')}>
+        <EmptyState message={t('cart.empty')} actionLabel={t('cart.toCatalog')} actionTo="/" />
+      </PageShell>
     );
   }
 
@@ -49,26 +48,21 @@ export function Checkout() {
   };
 
   return (
-    <div className="page">
-      <Link to="/cart" className="back">
-        ← {t('cart.title')}
-      </Link>
-      <h1>{t('checkout.title')}</h1>
-
+    <PageShell title={t('checkout.title')} backTo={{ to: '/cart', label: `← ${t('cart.title')}` }}>
       <ul className="checkout-items">
         {items.map((i) => (
           <li key={i.productId} className="checkout-item">
             <span className="checkout-item-title">{i.productTitle}</span>
             <span className="checkout-item-qty">× {i.quantity}</span>
             <span className="checkout-item-price">
-              {(Math.round(i.priceAtPurchase * i.quantity * 100) / 100).toFixed(2)} {currency}
+              {formatMoney(i.priceAtPurchase * i.quantity, currency)}
             </span>
           </li>
         ))}
       </ul>
 
       <p className="total">
-        {t('orderCreate.total')} {(Math.round(sum * 100) / 100).toFixed(2)} {currency} · {t('orders.itemsCount', { count: items.length })}
+        {t('orderCreate.total')} {formatMoney(sum, currency)} · {t('orders.itemsCount', { count: items.length })}
       </p>
 
       {!isLoggedIn ? (
@@ -90,6 +84,6 @@ export function Checkout() {
       )}
 
       {error ? <p className="error">{error}</p> : null}
-    </div>
+    </PageShell>
   );
 }

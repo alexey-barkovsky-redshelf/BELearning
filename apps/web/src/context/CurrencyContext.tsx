@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 export const CURRENCY_OPTIONS = [
   { value: 'USD', label: 'USD' },
@@ -24,16 +17,8 @@ type CurrencyContextValue = {
 const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrencyState] = useState<CurrencyCode>('USD');
-
-  const setCurrency = useCallback((code: CurrencyCode) => {
-    setCurrencyState(code);
-  }, []);
-
-  const value = useMemo(
-    () => ({ currency, setCurrency }),
-    [currency, setCurrency]
-  );
+  const [currency, setCurrency] = useState<CurrencyCode>('USD');
+  const value = useMemo(() => ({ currency, setCurrency }), [currency]);
 
   return (
     <CurrencyContext.Provider value={value}>

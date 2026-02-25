@@ -7,11 +7,10 @@ import { Slug } from './value-objects/Slug.js';
 const VALID_CATEGORIES = new Set<string>(PRODUCT_CATEGORY_CODES);
 
 function validateCategories(categories?: ProductCategoryCode[]): ProductCategoryCode[] | undefined {
-  if (!categories || categories.length === 0) return undefined;
-  const out: ProductCategoryCode[] = [];
-  for (const c of categories) {
-    if (VALID_CATEGORIES.has(c)) out.push(c as ProductCategoryCode);
+  if (!categories || categories.length === 0) {
+    return undefined;
   }
+  const out = categories.filter((c): c is ProductCategoryCode => VALID_CATEGORIES.has(c));
   return out.length > 0 ? out : undefined;
 }
 

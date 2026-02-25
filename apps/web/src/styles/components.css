@@ -1,3 +1,4 @@
+/* Component styles. Repeated patterns use CSS custom properties from tokens.css (e.g. --space-*, --color-*). */
 /* Layout */
 .layout {
   min-height: 100vh;
@@ -151,7 +152,7 @@
   line-height: var(--line-height-tight);
 }
 
-/* Dashboard — плиточная сетка */
+/* Dashboard — tile grid */
 .dashboard-header {
   display: flex;
   flex-wrap: wrap;
@@ -336,7 +337,7 @@ a.back:active {
   box-shadow: 0 0 0 var(--outline-width) var(--color-border-focus);
 }
 
-/* Buttons — outline (синяя каёмка), при наведении/нажатии заливка, текст белый */
+/* Buttons — outline (blue border), filled on hover/active, white text */
 .button,
 a.button {
   padding: var(--space-4) var(--space-6);
@@ -381,7 +382,7 @@ a.button.small {
   min-height: 2.25rem;
 }
 
-/* Залитая кнопка (например «В корзине») */
+/* Filled button (e.g. "In cart") */
 .button.filled,
 a.button.filled {
   background: var(--color-accent);
@@ -492,7 +493,7 @@ a.button.filled:hover {
   margin: 0 0 var(--space-2);
 }
 
-/* Product list — плиточная сетка */
+/* Product list — tile grid */
 .product-list {
   list-style: none;
   margin: 0;
@@ -955,7 +956,7 @@ a.button-secondary:hover {
   font-size: var(--font-size-sm);
 }
 
-/* Order & access lists — плитки */
+/* Order & access lists — tiles */
 .order-list,
 .access-list {
   list-style: none;

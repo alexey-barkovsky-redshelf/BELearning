@@ -9,6 +9,7 @@ import {
 import en from '../locales/en.json';
 import ru from '../locales/ru.json';
 
+/** Minimal i18n: JSON locale files + traverse/interpolate. For pluralization/namespaces consider react-i18next. */
 const messages: Record<string, Record<string, unknown>> = { en: en as Record<string, unknown>, ru: ru as Record<string, unknown> };
 
 const STORAGE_KEY = 'belearning-lang';

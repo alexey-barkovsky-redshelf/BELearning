@@ -9,9 +9,7 @@ export class InMemoryOrderRepository implements IOrderRepository {
   }
 
   async findByUserId(userId: string): Promise<Order[]> {
-    return Array.from(this.store.values()).filter((o) => {
-      return o.userId === userId;
-    });
+    return Array.from(this.store.values()).filter((o) => o.userId === userId);
   }
 
   async save(order: Order): Promise<Order> {

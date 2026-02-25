@@ -1,13 +1,12 @@
 /**
- * Design system tokens
- * Светло, тонко, синевато — без стерильности.
+ * Design system tokens — light, subtle, blue-tinted.
  */
 :root {
-  /* Colors — base (лёгкий тёплый фон) */
+  /* Colors — base (warm light background) */
   --color-white: #ffffff;
   --color-bg: #f6f8fc;
   --color-surface: #ffffff;
-  /* Borders — тонкие, синеватые */
+  /* Borders — thin, blue-tinted */
   --color-border: #c5d4eb;
   --color-border-subtle: #dce5f2;
   --color-border-focus: #93b5e0;
@@ -31,7 +30,7 @@
   --color-warning-bg: #fffbeb;
   --color-warning-text: #b45309;
 
-  /* Typography — крупнее для читаемости и акцентов */
+  /* Typography — larger for readability and emphasis */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-size-xs: 0.8125rem;
   --font-size-sm: 0.9375rem;
@@ -46,7 +45,7 @@
   --line-height-tight: 1.35;
   --line-height-normal: 1.5;
 
-  /* Spacing — крупные отступы (4px base) */
+  /* Spacing — generous (4px base) */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -59,7 +58,7 @@
   --space-16: 4rem;
   --space-20: 5rem;
 
-  /* Border — тонкая линия */
+  /* Border — thin line */
   --border-width: 1px;
   --border-color: var(--color-border);
   --outline-width: 1px;

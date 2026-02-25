@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { DomainError } from '../domain/errors.js';
 import { ProductService } from '../services/ProductService.js';
 
 export class ProductController {
@@ -30,15 +29,7 @@ export class ProductController {
   }
 
   async create(req: Request, res: Response): Promise<void> {
-    try {
-      const product = await this.productService.create(req.body);
-      res.status(201).json(product);
-    } catch (err) {
-      if (err instanceof DomainError) {
-        res.status(400).json({ error: err.message, code: err.code });
-        return;
-      }
-      throw err;
-    }
+    const product = await this.productService.create(req.body);
+    res.status(201).json(product);
   }
 }

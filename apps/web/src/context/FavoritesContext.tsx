@@ -1,9 +1,7 @@
 /**
- * Favorites (избранное): список productId по userId.
- * Сейчас: localStorage ключ belearning-favorites-${userId} (или -guest без логина).
- * Позже в юзере: на бэке в модели User поле favoriteProductIds: string[] или
- * отдельная таблица Favorites (userId, productId); API GET/PATCH /user/me/favorites
- * или POST/DELETE /favorites/:productId.
+ * Favorites: productId list per userId.
+ * Current: localStorage key belearning-favorites-${userId} (or -guest when not logged in).
+ * Future: backend User.favoriteProductIds or Favorites table; API GET/PATCH /user/me/favorites or POST/DELETE /favorites/:productId.
  */
 import {
   createContext,
@@ -11,6 +9,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -59,12 +58,18 @@ type FavoritesProviderProps = {
 
 export function FavoritesProvider({ children, userId }: FavoritesProviderProps) {
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => loadFavorites(userId));
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     setFavoriteIds(loadFavorites(userId));
+    isInitialLoad.current = true;
   }, [userId]);
 
   useEffect(() => {
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
     saveFavorites(userId, favoriteIds);
   }, [userId, favoriteIds]);
 

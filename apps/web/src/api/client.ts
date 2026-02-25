@@ -1,4 +1,13 @@
-const BASE = '/api';
+import type { Product, ProductCategoryCode, OrderItem, Order } from '@belearning/shared';
+import { PRODUCT_CATEGORY_CODES } from '@belearning/shared';
+
+const BASE = (import.meta as { env?: { VITE_API_BASE?: string } }).env?.VITE_API_BASE ?? '/api';
+
+/** API error payload (4xx responses). */
+export interface ApiErrorPayload {
+  error: string;
+  code?: string;
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -6,28 +15,20 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error((err as { error?: string }).error ?? res.statusText);
+    const payload: ApiErrorPayload = await res
+      .json()
+      .then((data: unknown) => ({
+        error: typeof (data as ApiErrorPayload).error === 'string' ? (data as ApiErrorPayload).error : res.statusText,
+        code: typeof (data as ApiErrorPayload).code === 'string' ? (data as ApiErrorPayload).code : undefined,
+      }))
+      .catch(() => ({ error: res.statusText }));
+    throw new Error(payload.error);
   }
   return res.json() as Promise<T>;
 }
 
-export type ProductCategoryCode = 'health' | 'sport' | 'hobby' | 'promotions' | 'for_men' | 'for_women' | 'for_children' | 'food' | 'books';
-
-export type Product = {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  currency: string;
-  description?: string;
-  categories?: ProductCategoryCode[];
-  manufacturer?: string;
-};
-
-export const PRODUCT_CATEGORY_CODES: ProductCategoryCode[] = [
-  'health', 'sport', 'hobby', 'promotions', 'for_men', 'for_women', 'for_children', 'food', 'books',
-];
+export type { Product, ProductCategoryCode, OrderItem, Order };
+export { PRODUCT_CATEGORY_CODES };
 
 export type Category = { code: string };
 
@@ -38,14 +39,12 @@ export const api = {
   getProduct: (id: string) => request<Product>(`/products/${id}`),
   getProductBySlug: (slug: string) => request<Product>(`/products/slug/${slug}`),
 
-  createOrder: (body: { userId: string; items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>; currency?: string }) =>
-    request<{ id: string; userId: string; status: string; totalAmount: number; currency: string; items: unknown[]; createdAt: string; updatedAt: string }>('/orders', {
+  createOrder: (body: { userId: string; items: OrderItem[]; currency?: string }) =>
+    request<Order>('/orders', {
       method: 'POST',
       body: JSON.stringify({ ...body, currency: body.currency ?? 'USD' }),
     }),
-  getOrder: (id: string) => request<{ id: string; userId: string; status: string; totalAmount: number; currency: string; items: unknown[]; createdAt: string; updatedAt: string }>(`/orders/${id}`),
-  getOrdersByUser: (userId: string) => request<Array<{ id: string; userId: string; status: string; totalAmount: number; currency: string; items: unknown[]; createdAt: string; updatedAt: string }>>(`/orders/user/${userId}`),
-  markOrderPaid: (id: string) =>
-    request<{ id: string; userId: string; status: string; totalAmount: number; currency: string; items: unknown[]; createdAt: string; updatedAt: string }>(`/orders/${id}/paid`, { method: 'POST' }),
-
+  getOrder: (id: string) => request<Order>(`/orders/${id}`),
+  getOrdersByUser: (userId: string) => request<Order[]>(`/orders/user/${userId}`),
+  markOrderPaid: (id: string) => request<Order>(`/orders/${id}/paid`, { method: 'POST' }),
 };

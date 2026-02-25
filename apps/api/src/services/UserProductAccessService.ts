@@ -6,13 +6,7 @@ export class UserProductAccessService {
 
   async findByUserId(userId: string): Promise<IUserProductAccess[]> {
     const list = await this.repository.findByUserId(userId);
-    return list
-      .filter((a) => {
-        return a.isValid();
-      })
-      .map((a) => {
-        return a.toJSON();
-      });
+    return list.filter((a) => a.isValid()).map((a) => a.toJSON());
   }
 
   async hasAccess(userId: string, productId: string): Promise<boolean> {
