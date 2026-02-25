@@ -1,5 +1,3 @@
-/* Component styles. Repeated patterns use CSS custom properties from tokens.css (e.g. --space-*, --color-*). */
-/* Layout */
 .layout {
   min-height: 100vh;
   display: flex;
@@ -139,7 +137,6 @@
   width: 100%;
 }
 
-/* Page */
 .page {
   margin: 0;
 }
@@ -152,7 +149,6 @@
   line-height: var(--line-height-tight);
 }
 
-/* Dashboard — tile grid */
 .dashboard-header {
   display: flex;
   flex-wrap: wrap;
@@ -304,7 +300,6 @@ a.back:active {
   font-weight: var(--font-weight-medium);
 }
 
-/* User row (demo userId input) */
 .user-row {
   display: flex;
   align-items: center;
@@ -337,7 +332,6 @@ a.back:active {
   box-shadow: 0 0 0 var(--outline-width) var(--color-border-focus);
 }
 
-/* Buttons — outline (blue border), filled on hover/active, white text */
 .button,
 a.button {
   padding: var(--space-4) var(--space-6);
@@ -382,7 +376,6 @@ a.button.small {
   min-height: 2.25rem;
 }
 
-/* Filled button (e.g. "In cart") */
 .button.filled,
 a.button.filled {
   background: var(--color-accent);
@@ -395,7 +388,6 @@ a.button.filled:hover {
   color: var(--color-white);
 }
 
-/* Category filter */
 .category-filter {
   display: flex;
   flex-wrap: wrap;
@@ -493,7 +485,6 @@ a.button.filled:hover {
   margin: 0 0 var(--space-2);
 }
 
-/* Product list — tile grid */
 .product-list {
   list-style: none;
   margin: 0;
@@ -746,7 +737,6 @@ a.button-secondary:hover {
   cursor: not-allowed;
 }
 
-/* Login / Sign in */
 .login-container {
   max-width: 22rem;
   margin: 0 auto;
@@ -923,7 +913,6 @@ a.button-secondary:hover {
   border-radius: var(--radius-md);
 }
 
-/* Product list compact (in order form) */
 .product-list.compact {
   list-style: none;
   margin: 0 0 var(--space-4);
@@ -951,7 +940,6 @@ a.button-secondary:hover {
   font-size: var(--font-size-sm);
 }
 
-/* Order list — tiles */
 .order-list {
   list-style: none;
   margin: 0;
@@ -1019,7 +1007,6 @@ a.button-secondary:hover {
   color: var(--color-accent);
 }
 
-/* Order form */
 .order-form label {
   display: block;
   margin-bottom: var(--space-2);

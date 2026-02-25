@@ -1,8 +1,3 @@
-/**
- * Favorites: productId list per userId.
- * Current: localStorage key belearning-favorites-${userId} (or -guest when not logged in).
- * Future: backend User.favoriteProductIds or Favorites table; API GET/PATCH /user/me/favorites or POST/DELETE /favorites/:productId.
- */
 import {
   createContext,
   useCallback,

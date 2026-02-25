@@ -3,7 +3,6 @@ import { PRODUCT_CATEGORY_CODES } from '@belearning/shared';
 
 const BASE = (import.meta as { env?: { VITE_API_BASE?: string } }).env?.VITE_API_BASE ?? '/api';
 
-/** API error payload (4xx responses). */
 export interface ApiErrorPayload {
   error: string;
   code?: string;

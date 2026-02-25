@@ -5,7 +5,6 @@ import type { IOrderRepository } from '../repositories/interfaces/IOrderReposito
 export class OrderService {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
-  /** Default currency is USD when not provided; same default as Order.create in domain. */
   async create(
     userId: string,
     items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>,

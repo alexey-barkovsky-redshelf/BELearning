@@ -8,9 +8,7 @@ type ProductCardProps = {
   isFavorite: boolean;
   onToggleFavorite: (productId: string) => void;
   onAddToCart: (item: { productId: string; productTitle: string; priceAtPurchase: number; quantity?: number }) => void;
-  /** Optional: show description (e.g. on Favorites page) */
   showDescription?: boolean;
-  /** Optional: show extra "Remove" button (e.g. on Favorites page) */
   showRemoveFromFavorites?: boolean;
   className?: string;
 };

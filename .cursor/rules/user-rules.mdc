@@ -16,6 +16,7 @@ alwaysApply: true
 ## Code
 
 - Do not omit curly braces, even if it's a one-line block of code
+- Do not add comments if functionality (namings, code) is self-explanatory
 
 ---
 

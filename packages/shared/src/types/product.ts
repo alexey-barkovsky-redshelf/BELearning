@@ -1,4 +1,3 @@
-/** Category codes for products (API and filters) */
 export const PRODUCT_CATEGORY = {
   HEALTH: 'health',
   SPORT: 'sport',
@@ -22,9 +21,7 @@ export interface Product {
   description?: string;
   price: number;
   currency: string;
-  /** Product categories (e.g. health, sport, for_men, promotions) */
   categories?: ProductCategoryCode[];
-  /** Manufacturer / brand (for filtering and display) */
   manufacturer?: string;
   createdAt: string;
   updatedAt: string;
