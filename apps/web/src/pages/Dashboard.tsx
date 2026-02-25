@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { api, type Category } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
@@ -7,7 +6,6 @@ import { getCategoryImageUrl } from '../config/categoryImages';
 
 export function Dashboard() {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
   const { data: categories = [], loading, error } = useAsync<Category[]>(
     () => api.getCategories(),
     [],
@@ -17,18 +15,6 @@ export function Dashboard() {
       },
     }
   );
-
-  const filteredCategories = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return categories;
-    }
-    const q = searchQuery.trim().toLowerCase();
-    return categories.filter((cat) => {
-      const name = t(`categories.${cat.code}`).toLowerCase();
-      const desc = t(`dashboard.tiles.${cat.code}Desc`).toLowerCase();
-      return name.includes(q) || desc.includes(q) || cat.code.toLowerCase().includes(q);
-    });
-  }, [categories, searchQuery, t]);
 
   if (error) {
     return (
@@ -49,8 +35,6 @@ export function Dashboard() {
             className="dashboard-search-input"
             placeholder={t('dashboard.searchPlaceholder')}
             aria-label={t('dashboard.searchPlaceholder')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </header>
@@ -67,7 +51,7 @@ export function Dashboard() {
             <span className="dashboard-tile-title">{t('categories.all')}</span>
             <span className="dashboard-tile-desc">{t('dashboard.tiles.allDesc')}</span>
           </Link>
-          {filteredCategories.map((cat) => (
+          {categories.map((cat) => (
             <Link
               key={cat.code}
               to={`/products?category=${encodeURIComponent(cat.code)}`}

@@ -26,9 +26,6 @@ packages/
 | `GET /health` | Health check |
 | `GET/POST /products`, `GET /products/:id`, `GET /products/slug/:slug` | Products |
 | `POST /orders`, `GET /orders/:id`, `GET /orders/user/:userId`, `POST /orders/:id/paid` | Orders |
-| `GET /access/user/:userId`, `GET /access/user/:userId/product/:productId` | User access (granted when order is paid) |
-
-When an order is marked paid, the user gets access to each product in the order. Use access endpoints to list or check access. Product type (web view vs download) can be added on Product later.
 
 ## Setup
 
@@ -48,4 +45,4 @@ yarn workspace @belearning/shared build
 
 Web proxies `/api` to the API (`apps/web/vite.config.ts`).
 
-**Web UI** — Products list and detail, create order (with User ID + cart), list orders and mark paid, list access by User ID. Run `yarn dev:web` and open http://localhost:5173. Use any User ID (e.g. `user-1`) for Orders and My access.
+**Web UI** — Products list and detail, create order (with User ID + cart), list orders and mark paid. Run `yarn dev:web` and open http://localhost:5173. Use any User ID (e.g. `user-1`) for Orders.

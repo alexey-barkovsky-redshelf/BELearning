@@ -44,9 +44,3 @@ export class InvalidUserError extends DomainError {
     super(message, 'INVALID_USER');
   }
 }
-
-export class InvalidUserProductAccessError extends DomainError {
-  constructor(message: string) {
-    super(message, 'INVALID_ACCESS');
-  }
-}

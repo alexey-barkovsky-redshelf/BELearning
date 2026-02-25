@@ -1,14 +1,9 @@
 import type { Order as IOrder } from '@belearning/shared';
 import { Order } from '../domain/Order.js';
-import { UserProductAccess } from '../domain/UserProductAccess.js';
 import type { IOrderRepository } from '../repositories/interfaces/IOrderRepository.js';
-import type { IUserProductAccessRepository } from '../repositories/interfaces/IUserProductAccessRepository.js';
 
 export class OrderService {
-  constructor(
-    private readonly orderRepository: IOrderRepository,
-    private readonly accessRepository: IUserProductAccessRepository
-  ) {}
+  constructor(private readonly orderRepository: IOrderRepository) {}
 
   /** Default currency is USD when not provided; same default as Order.create in domain. */
   async create(
@@ -46,18 +41,6 @@ export class OrderService {
     }
     order.markPaid();
     await this.orderRepository.save(order);
-
-    const now = new Date().toISOString();
-    for (const item of order.items) {
-      const access = UserProductAccess.create({
-        userId: order.userId,
-        productId: item.productId,
-        grantedAt: now,
-        sourceOrderId: order.id,
-      });
-      await this.accessRepository.save(access);
-    }
-
     return order.toJSON();
   }
 }
