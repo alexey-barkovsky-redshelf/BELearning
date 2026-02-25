@@ -1,0 +1,22 @@
+---
+description: Project rules — add your rules for the AI here
+alwaysApply: true
+---
+
+# Project Rules
+
+
+## Language
+- Use English even if user can use any other language
+
+## Behavior
+
+- Only write code when the user asks for action, and don't just ask a question
+
+## Code
+
+- Do not omit curly braces, even if it's a one-line block of code
+- Do not add comments if functionality (namings, code) is self-explanatory
+
+---
+

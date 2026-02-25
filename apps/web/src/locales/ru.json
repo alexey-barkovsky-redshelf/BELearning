@@ -1,0 +1,137 @@
+{
+  "nav": {
+    "home": "Главная",
+    "catalog": "Каталог",
+    "cart": "Корзина",
+    "favorites": "Избранное",
+    "profile": "Профиль"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "empty": "Пока ничего в избранном.",
+    "clearAll": "Очистить всё",
+    "remove": "Удалить"
+  },
+  "dashboard": {
+    "title": "Главная",
+    "searchPlaceholder": "Поиск товаров…",
+    "tiles": {
+      "allDesc": "Все товары",
+      "healthDesc": "Здоровье и уход за собой",
+      "sportDesc": "Фитнес и активный образ жизни",
+      "hobbyDesc": "Творчество и досуг",
+      "promotionsDesc": "Специальные предложения",
+      "for_menDesc": "Подборка для него",
+      "for_womenDesc": "Подборка для неё",
+      "for_childrenDesc": "Для детей и семьи",
+      "foodDesc": "Питание и рецепты",
+      "booksDesc": "Книги и обучение",
+      "categoryDesc": "Товары этой категории"
+    }
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Корзина пуста",
+    "inCart": "В корзине",
+    "toCatalog": "На главную",
+    "checkout": "Оформить заказ",
+    "added": "Добавлено",
+    "goToCart": "Перейти в корзину",
+    "clearCart": "Очистить корзину"
+  },
+  "checkout": {
+    "title": "Оформление заказа",
+    "loginRequired": "Войдите, чтобы продолжить.",
+    "login": "Войти",
+    "submit": "Оформить заказ"
+  },
+  "login": {
+    "title": "Вход",
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signUpHint": "Выберите User ID для использования. Можно любой идентификатор (например, email или ник).",
+    "userIdLabel": "User ID",
+    "userIdPlaceholder": "Введите User ID",
+    "submit": "Войти",
+    "submitSignUp": "Создать",
+    "errorRequired": "Укажите User ID."
+  },
+  "profile": {
+    "title": "Профиль",
+    "notLoggedIn": "Вы не залогинены.",
+    "userIdLabel": "User ID",
+    "login": "Показать мои заказы",
+    "myOrders": "Мои заказы",
+    "thanks": "Заказ оформлен. Ожидайте доставку.",
+    "preferences": "Настройки",
+    "language": "Язык",
+    "currency": "Валюта"
+  },
+  "categories": {
+    "all": "Все",
+    "health": "Здоровье",
+    "sport": "Спорт",
+    "hobby": "Хобби",
+    "promotions": "Акции",
+    "for_men": "Для мужчин",
+    "for_women": "Для женщин",
+    "for_children": "Для детей",
+    "food": "Продукты питания",
+    "books": "Книги"
+  },
+  "products": {
+    "title": "Товары",
+    "loading": "Загрузка…",
+    "backToCatalog": "← На главную",
+    "backToCatalogLink": "На главную",
+    "addToOrder": "В корзину",
+    "buy": "Купить",
+    "manufacturer": "Производитель",
+    "addToFavorites": "В избранное",
+    "removeFromFavorites": "Убрать из избранного"
+  },
+  "productDetail": {
+    "notFound": "Товар не найден",
+    "notFoundShort": "Не найден"
+  },
+  "orders": {
+    "title": "Заказы",
+    "userIdLabel": "User ID (для демо):",
+    "loadOrders": "Загрузить заказы",
+    "createNew": "Создать новый заказ",
+    "empty": "Пока нет заказов.",
+    "orderId": "Заказ {{id}}…",
+    "itemsCount": "{{count}} шт.",
+    "markPaid": "Отметить оплаченным",
+    "markPaidProgress": "…",
+    "backToOrders": "← Заказы"
+  },
+  "orderCreate": {
+    "title": "Создать заказ",
+    "userId": "User ID",
+    "productsHeading": "Товары",
+    "cartHeading": "Корзина",
+    "total": "Итого:",
+    "add": "Добавить",
+    "remove": "Удалить",
+    "submit": "Оформить заказ",
+    "submitting": "Оформляем…"
+  },
+  "common": {
+    "loading": "Загрузка…",
+    "userIdPlaceholder": "напр. user-1"
+  },
+  "errors": {
+    "loadFailed": "Не удалось загрузить",
+    "markPaidFailed": "Не удалось отметить оплату",
+    "createOrderFailed": "Не удалось создать заказ",
+    "enterUserId": "Введите User ID",
+    "addOneProduct": "Добавьте хотя бы один товар"
+  },
+  "status": {
+    "draft": "черновик",
+    "paid": "оплачен",
+    "cancelled": "отменён",
+    "_": "—"
+  }
+}
