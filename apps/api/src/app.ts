@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { type Express } from 'express';
 import { registerRoutes } from './routes/index.js';
-import { domainErrorMiddleware } from './middleware/domainErrorMiddleware.js';
+import { domainErrorMiddleware } from './shared/middleware/domainErrorMiddleware.js';
 
 export async function createApp(): Promise<Express> {
   const app = express();

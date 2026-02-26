@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "npx vite build",
     "clean": "rm -rf dist",
-    "dev": "vite",
-    "preview": "vite preview"
+    "dev": "npx vite",
+    "preview": "npx vite preview"
   },
   "dependencies": {
     "@belearning/shared": "*",
