@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { InMemoryProductRepository } from '../repositories/InMemoryProductRepository.js';
-import { InMemoryOrderRepository } from '../repositories/InMemoryOrderRepository.js';
-import { ProductService } from '../services/ProductService.js';
-import { CategoryService } from '../services/CategoryService.js';
-import { OrderService } from '../services/OrderService.js';
-import { ProductController } from '../controllers/ProductController.js';
-import { CategoryController } from '../controllers/CategoryController.js';
-import { OrderController } from '../controllers/OrderController.js';
-import { seedMockData } from '../seed/mockData.js';
-import { createHealthRoutes } from './healthRoutes.js';
-import { createProductRoutes } from './productRoutes.js';
-import { createCategoryRoutes } from './categoryRoutes.js';
-import { createOrderRoutes } from './orderRoutes.js';
+import { InMemoryProductRepository } from '../modules/product/product.repository.js';
+import { InMemoryOrderRepository } from '../modules/order/order.repository.js';
+import { ProductService } from '../modules/product/product.service.js';
+import { CategoryService } from '../modules/category/category.service.js';
+import { OrderService } from '../modules/order/order.service.js';
+import { ProductController } from '../modules/product/product.controller.js';
+import { CategoryController } from '../modules/category/category.controller.js';
+import { OrderController } from '../modules/order/order.controller.js';
+import { seedMockData } from '../infrastructure/seed.js';
+import { createHealthRoutes } from '../modules/health/health.routes.js';
+import { createProductRoutes } from '../modules/product/product.routes.js';
+import { createCategoryRoutes } from '../modules/category/category.routes.js';
+import { createOrderRoutes } from '../modules/order/order.routes.js';
 
 export async function registerRoutes(): Promise<ReturnType<typeof Router>> {
   const root = Router();
