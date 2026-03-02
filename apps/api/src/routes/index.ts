@@ -13,26 +13,28 @@ import { createProductRoutes } from '../modules/product/Routes/product.routes.js
 import { createCategoryRoutes } from '../modules/category/Routes/category.routes.js';
 import { createOrderRoutes } from '../modules/order/Routes/order.routes.js';
 
-export async function registerRoutes(): Promise<ReturnType<typeof Router>> {
-  const root = Router();
+export class AppRouter {
+  async getRouter(): Promise<Router> {
+    const root = Router();
 
-  const productRepository = new InMemoryProductRepository();
-  const orderRepository = new InMemoryOrderRepository();
+    const productRepository = new InMemoryProductRepository();
+    const orderRepository = new InMemoryOrderRepository();
 
-  await seedMockData(productRepository);
+    await seedMockData(productRepository);
 
-  const productService = new ProductService(productRepository);
-  const orderService = new OrderService(orderRepository);
+    const productService = new ProductService(productRepository);
+    const orderService = new OrderService(orderRepository);
 
-  const categoryService = new CategoryService();
-  const productController = new ProductController(productService);
-  const categoryController = new CategoryController(categoryService);
-  const orderController = new OrderController(orderService);
+    const categoryService = new CategoryService();
+    const productController = new ProductController(productService);
+    const categoryController = new CategoryController(categoryService);
+    const orderController = new OrderController(orderService);
 
-  root.use('/health', createHealthRoutes());
-  root.use('/categories', createCategoryRoutes(categoryController));
-  root.use('/products', createProductRoutes(productController));
-  root.use('/orders', createOrderRoutes(orderController));
+    root.use('/health', createHealthRoutes());
+    root.use('/categories', createCategoryRoutes(categoryController));
+    root.use('/products', createProductRoutes(productController));
+    root.use('/orders', createOrderRoutes(orderController));
 
-  return root;
+    return root;
+  }
 }
