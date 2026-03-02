@@ -1,6 +1,6 @@
 import { PRODUCT_CATEGORY } from '@belearning/utils';
-import { Product } from '../modules/product/Models/product.model.js';
-import type { IProductRepository } from '../modules/product/Types/product.types.js';
+import { Product } from '../modules/product/Models/index.js';
+import type { IProductRepository } from '../modules/product/Types/index.js';
 
 function now(): string {
   return new Date().toISOString();

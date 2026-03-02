@@ -1,6 +1,6 @@
 import type { OrderItem as IOrderItem, Order as IOrder, OrderStatus as IOrderStatus } from '@belearning/shared';
-import { BaseEntity } from '../../../shared/entities/base.entity.js';
-import { InvalidOrderError } from '../Errors/order.errors.js';
+import { BaseEntity } from '../../../shared/entities/index.js';
+import { InvalidOrderError } from '../Errors/index.js';
 
 export class OrderItem {
   public readonly productId: string;

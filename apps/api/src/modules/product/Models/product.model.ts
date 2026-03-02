@@ -1,8 +1,8 @@
 import type { Product as IProduct, ProductCategoryCode } from '@belearning/shared';
 import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
-import { BaseEntity } from '../../../shared/entities/base.entity.js';
-import { InvalidProductError } from '../Errors/product.errors.js';
-import { Money, Slug } from '../ValueObjects/product.value-objects.js';
+import { BaseEntity } from '../../../shared/entities/index.js';
+import { InvalidProductError } from '../Errors/index.js';
+import { Money, Slug } from '../ValueObjects/index.js';
 
 const VALID_CATEGORIES = new Set<string>(PRODUCT_CATEGORY_CODES);
 

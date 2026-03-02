@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { InMemoryProductRepository } from '../modules/product/Repository/product.repository.js';
-import { InMemoryOrderRepository } from '../modules/order/Repository/order.repository.js';
-import { ProductService } from '../modules/product/Services/product.service.js';
-import { CategoryService } from '../modules/category/Services/category.service.js';
-import { OrderService } from '../modules/order/Services/order.service.js';
-import { ProductController } from '../modules/product/Controllers/product.controller.js';
-import { CategoryController } from '../modules/category/Controllers/category.controller.js';
-import { OrderController } from '../modules/order/Controllers/order.controller.js';
-import { seedMockData } from '../infrastructure/seed.js';
-import { createHealthRoutes } from '../modules/health/Routes/health.routes.js';
-import { createProductRoutes } from '../modules/product/Routes/product.routes.js';
-import { createCategoryRoutes } from '../modules/category/Routes/category.routes.js';
-import { createOrderRoutes } from '../modules/order/Routes/order.routes.js';
+import { InMemoryProductRepository } from '../modules/product/Repository/index.js';
+import { InMemoryOrderRepository } from '../modules/order/Repository/index.js';
+import { ProductService } from '../modules/product/Services/index.js';
+import { CategoryService } from '../modules/category/Services/index.js';
+import { OrderService } from '../modules/order/Services/index.js';
+import { ProductController } from '../modules/product/Controllers/index.js';
+import { CategoryController } from '../modules/category/Controllers/index.js';
+import { OrderController } from '../modules/order/Controllers/index.js';
+import { seedMockData } from '../infrastructure/index.js';
+import { createHealthRoutes } from '../modules/health/Routes/index.js';
+import { createProductRoutes } from '../modules/product/Routes/index.js';
+import { createCategoryRoutes } from '../modules/category/Routes/index.js';
+import { createOrderRoutes } from '../modules/order/Routes/index.js';
 
 export class AppRouter {
   public async getRouter(): Promise<Router> {

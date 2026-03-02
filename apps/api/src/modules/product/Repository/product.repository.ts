@@ -1,5 +1,5 @@
-import { Product } from '../Models/product.model.js';
-import type { IProductRepository } from '../Types/product.types.js';
+import { Product } from '../Models/index.js';
+import type { IProductRepository } from '../Types/index.js';
 
 export class InMemoryProductRepository implements IProductRepository {
   private readonly store: Map<string, Product> = new Map();

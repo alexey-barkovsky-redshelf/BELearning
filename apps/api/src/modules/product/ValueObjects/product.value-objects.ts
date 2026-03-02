@@ -1,4 +1,4 @@
-import { InvalidSlugError, InvalidMoneyError } from '../Errors/product.errors.js';
+import { InvalidSlugError, InvalidMoneyError } from '../Errors/index.js';
 
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

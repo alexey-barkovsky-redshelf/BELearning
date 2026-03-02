@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { OrderService } from '../Services/order.service.js';
+import { OrderService } from '../Services/index.js';
 
 function assertCreateOrderBody(body: unknown): asserts body is { userId: string; items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>; currency?: string } {
   if (!body || typeof body !== 'object') {

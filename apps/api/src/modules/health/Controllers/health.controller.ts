@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { HealthService } from '../Services/health.service.js';
+import { HealthService } from '../Services/index.js';
 
 export class HealthController {
   private readonly healthService: HealthService = new HealthService();

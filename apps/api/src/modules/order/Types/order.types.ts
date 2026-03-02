@@ -1,4 +1,4 @@
-import type { Order } from '../Models/order.model.js';
+import type { Order } from '../Models/index.js';
 
 export interface IOrderRepository {
   findById(id: string): Promise<Order | null>;

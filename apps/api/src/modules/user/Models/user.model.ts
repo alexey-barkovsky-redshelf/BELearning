@@ -1,6 +1,6 @@
 import type { User as IUser } from '@belearning/shared';
-import { BaseEntity } from '../../../shared/entities/base.entity.js';
-import { Email } from '../ValueObjects/user.value-objects.js';
+import { BaseEntity } from '../../../shared/entities/index.js';
+import { Email } from '../ValueObjects/index.js';
 
 export class User extends BaseEntity {
   private readonly _email: Email;

@@ -1,6 +1,6 @@
 import type { Product as IProduct } from '@belearning/shared';
-import { Product } from '../Models/product.model.js';
-import type { IProductRepository } from '../Types/product.types.js';
+import { Product } from '../Models/index.js';
+import type { IProductRepository } from '../Types/index.js';
 
 export class ProductService {
   private readonly productRepository: IProductRepository;

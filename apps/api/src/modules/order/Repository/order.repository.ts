@@ -1,5 +1,5 @@
-import { Order } from '../Models/order.model.js';
-import type { IOrderRepository } from '../Types/order.types.js';
+import { Order } from '../Models/index.js';
+import type { IOrderRepository } from '../Types/index.js';
 
 export class InMemoryOrderRepository implements IOrderRepository {
   private readonly store: Map<string, Order> = new Map();
