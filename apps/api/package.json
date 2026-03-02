@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@belearning/shared": "*",
+    "@belearning/utils": "*",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.0"

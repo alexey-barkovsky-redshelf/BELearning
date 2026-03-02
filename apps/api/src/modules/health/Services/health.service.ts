@@ -1,4 +1,4 @@
-import { APP_NAME } from '@belearning/shared';
+import { APP_NAME } from '@belearning/utils';
 
 export class HealthService {
   getStatus(): { status: string; app: string; timestamp: string } {

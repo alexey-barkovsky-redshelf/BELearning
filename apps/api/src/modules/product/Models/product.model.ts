@@ -1,5 +1,5 @@
 import type { Product as IProduct, ProductCategoryCode } from '@belearning/shared';
-import { PRODUCT_CATEGORY_CODES } from '@belearning/shared';
+import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
 import { InvalidProductError } from '../Errors/product.errors.js';
 import { Money, Slug } from '../ValueObjects/product.value-objects.js';
 

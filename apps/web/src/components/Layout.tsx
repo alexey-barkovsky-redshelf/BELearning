@@ -1,5 +1,5 @@
 import { Outlet, Link, NavLink } from 'react-router-dom';
-import { APP_NAME } from '@belearning/shared';
+import { APP_NAME } from '@belearning/utils';
 import { useTranslation } from '../context/LocaleContext';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';

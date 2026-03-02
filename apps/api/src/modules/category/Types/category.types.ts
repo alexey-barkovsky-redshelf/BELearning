@@ -1,1 +1,1 @@
-export type CategoryDto = { code: string };
+export type { Category } from '@belearning/shared';

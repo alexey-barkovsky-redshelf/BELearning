@@ -1,4 +1,4 @@
-import { PRODUCT_CATEGORY } from '@belearning/shared';
+import { PRODUCT_CATEGORY } from '@belearning/utils';
 import { Product } from '../modules/product/Models/product.model.js';
 import type { IProductRepository } from '../modules/product/Types/product.types.js';
 
