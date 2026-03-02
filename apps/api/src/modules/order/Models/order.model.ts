@@ -1,4 +1,5 @@
 import type { OrderItem as IOrderItem, Order as IOrder, OrderStatus as IOrderStatus } from '@belearning/shared';
+import { BaseEntity } from '../../../shared/entities/base.entity.js';
 import { InvalidOrderError } from '../Errors/order.errors.js';
 
 export class OrderItem {
@@ -49,14 +50,11 @@ export class OrderItem {
   }
 }
 
-export class Order {
-  public readonly id: string;
+export class Order extends BaseEntity {
   public readonly userId: string;
   private _status: IOrderStatus;
   private readonly _items: OrderItem[];
   private readonly _currency: string;
-  public readonly createdAt: string;
-  public readonly updatedAt: string;
 
   private constructor(
     id: string,
@@ -67,13 +65,11 @@ export class Order {
     createdAt: string,
     updatedAt: string
   ) {
-    this.id = id;
+    super(id, createdAt, updatedAt);
     this.userId = userId;
     this._status = status;
     this._items = items;
     this._currency = currency;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 
   public get status(): IOrderStatus {
@@ -130,14 +126,12 @@ export class Order {
 
   public toJSON(): IOrder {
     return {
-      id: this.id,
+      ...this.toJSONBase(),
       userId: this.userId,
       status: this._status,
       totalAmount: this.totalAmount,
       currency: this._currency,
       items: this._items.map((i) => i.toJSON()),
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
     };
   }
 

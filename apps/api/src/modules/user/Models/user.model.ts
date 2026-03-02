@@ -1,18 +1,14 @@
 import type { User as IUser } from '@belearning/shared';
+import { BaseEntity } from '../../../shared/entities/base.entity.js';
 import { Email } from '../ValueObjects/user.value-objects.js';
 
-export class User {
-  public readonly id: string;
+export class User extends BaseEntity {
   private readonly _email: Email;
-  public readonly createdAt: string;
-  public readonly updatedAt: string;
   private _name?: string;
 
   private constructor(id: string, _email: Email, createdAt: string, updatedAt: string, name?: string) {
-    this.id = id;
+    super(id, createdAt, updatedAt);
     this._email = _email;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
     this._name = name;
   }
 
@@ -49,11 +45,9 @@ export class User {
 
   public toJSON(): IUser {
     return {
-      id: this.id,
+      ...this.toJSONBase(),
       email: this._email.toString(),
       name: this._name,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
     };
   }
 }
