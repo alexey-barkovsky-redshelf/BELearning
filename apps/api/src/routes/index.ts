@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { InMemoryProductRepository } from '../modules/product/Repository/index.js';
-import { InMemoryOrderRepository } from '../modules/order/Repository/index.js';
+import { prisma } from '../infrastructure/prisma.js';
+import { PrismaProductRepository } from '../modules/product/Repository/index.js';
+import { PrismaOrderRepository } from '../modules/order/Repository/index.js';
 import { ProductService } from '../modules/product/Services/index.js';
 import { CategoryService } from '../modules/category/Services/index.js';
 import { OrderService } from '../modules/order/Services/index.js';
@@ -17,8 +18,8 @@ export class AppRouter {
   public async getRouter(): Promise<Router> {
     const root = Router();
 
-    const productRepository = new InMemoryProductRepository();
-    const orderRepository = new InMemoryOrderRepository();
+    const productRepository = new PrismaProductRepository(prisma);
+    const orderRepository = new PrismaOrderRepository(prisma);
 
     await seedMockData(productRepository);
 
