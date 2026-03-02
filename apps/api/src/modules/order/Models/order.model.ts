@@ -2,14 +2,19 @@ import type { OrderItem as IOrderItem, Order as IOrder, OrderStatus as IOrderSta
 import { InvalidOrderError } from '../Errors/order.errors.js';
 
 export class OrderItem {
-  private constructor(
-    public readonly productId: string,
-    public readonly productTitle: string,
-    public readonly priceAtPurchase: number,
-    public readonly quantity: number
-  ) {}
+  public readonly productId: string;
+  public readonly productTitle: string;
+  public readonly priceAtPurchase: number;
+  public readonly quantity: number;
 
-  static create(
+  private constructor(productId: string, productTitle: string, priceAtPurchase: number, quantity: number) {
+    this.productId = productId;
+    this.productTitle = productTitle;
+    this.priceAtPurchase = priceAtPurchase;
+    this.quantity = quantity;
+  }
+
+  public static create(
     productId: string,
     productTitle: string,
     priceAtPurchase: number,
@@ -30,11 +35,11 @@ export class OrderItem {
     return new OrderItem(productId, productTitle.trim(), priceAtPurchase, quantity);
   }
 
-  getLineTotal(): number {
+  public getLineTotal(): number {
     return Math.round(this.priceAtPurchase * this.quantity * 100) / 100;
   }
 
-  toJSON(): IOrderItem {
+  public toJSON(): IOrderItem {
     return {
       productId: this.productId,
       productTitle: this.productTitle,
@@ -45,33 +50,49 @@ export class OrderItem {
 }
 
 export class Order {
-  private constructor(
-    public readonly id: string,
-    public readonly userId: string,
-    private _status: IOrderStatus,
-    private readonly _items: OrderItem[],
-    private readonly _currency: string,
-    public readonly createdAt: string,
-    public readonly updatedAt: string
-  ) {}
+  public readonly id: string;
+  public readonly userId: string;
+  private _status: IOrderStatus;
+  private readonly _items: OrderItem[];
+  private readonly _currency: string;
+  public readonly createdAt: string;
+  public readonly updatedAt: string;
 
-  get status(): IOrderStatus {
+  private constructor(
+    id: string,
+    userId: string,
+    status: IOrderStatus,
+    items: OrderItem[],
+    currency: string,
+    createdAt: string,
+    updatedAt: string
+  ) {
+    this.id = id;
+    this.userId = userId;
+    this._status = status;
+    this._items = items;
+    this._currency = currency;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public get status(): IOrderStatus {
     return this._status;
   }
 
-  get items(): ReadonlyArray<OrderItem> {
+  public get items(): ReadonlyArray<OrderItem> {
     return this._items;
   }
 
-  get totalAmount(): number {
+  public get totalAmount(): number {
     return this._items.reduce((sum, item) => sum + item.getLineTotal(), 0);
   }
 
-  get currency(): string {
+  public get currency(): string {
     return this._currency;
   }
 
-  static create(params: {
+  public static create(params: {
     id: string;
     userId: string;
     items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>;
@@ -92,7 +113,7 @@ export class Order {
     return new Order(params.id, params.userId, 'draft', items, currency, params.createdAt, params.updatedAt);
   }
 
-  static fromPlain(data: IOrder): Order {
+  public static fromPlain(data: IOrder): Order {
     const items = data.items.map((i: IOrderItem) =>
       OrderItem.create(i.productId, i.productTitle, i.priceAtPurchase, i.quantity)
     );
@@ -107,7 +128,7 @@ export class Order {
     );
   }
 
-  toJSON(): IOrder {
+  public toJSON(): IOrder {
     return {
       id: this.id,
       userId: this.userId,
@@ -124,7 +145,7 @@ export class Order {
     (this as unknown as { _status: IOrderStatus })._status = s;
   }
 
-  markPaid(): void {
+  public markPaid(): void {
     if (this._status === 'paid') {
       throw new InvalidOrderError('Order is already paid.');
     }
@@ -134,7 +155,7 @@ export class Order {
     this.setStatus('paid');
   }
 
-  cancel(): void {
+  public cancel(): void {
     if (this._status === 'paid') {
       throw new InvalidOrderError('Cannot cancel a paid order.');
     }

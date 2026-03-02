@@ -14,7 +14,7 @@ import { createCategoryRoutes } from '../modules/category/Routes/category.routes
 import { createOrderRoutes } from '../modules/order/Routes/order.routes.js';
 
 export class AppRouter {
-  async getRouter(): Promise<Router> {
+  public async getRouter(): Promise<Router> {
     const root = Router();
 
     const productRepository = new InMemoryProductRepository();

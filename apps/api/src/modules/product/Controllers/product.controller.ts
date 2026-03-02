@@ -2,15 +2,19 @@ import type { Request, Response } from 'express';
 import { ProductService } from '../Services/product.service.js';
 
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  private readonly productService: ProductService;
 
-  async list(req: Request, res: Response): Promise<void> {
+  public constructor(productService: ProductService) {
+    this.productService = productService;
+  }
+
+  public async list(req: Request, res: Response): Promise<void> {
     const category = typeof req.query.category === 'string' ? req.query.category : undefined;
     const list = await this.productService.list(category);
     res.json(list);
   }
 
-  async getById(req: Request, res: Response): Promise<void> {
+  public async getById(req: Request, res: Response): Promise<void> {
     const product = await this.productService.getById(req.params.id);
     if (!product) {
       res.status(404).json({ error: 'Product not found' });
@@ -19,7 +23,7 @@ export class ProductController {
     res.json(product);
   }
 
-  async getBySlug(req: Request, res: Response): Promise<void> {
+  public async getBySlug(req: Request, res: Response): Promise<void> {
     const product = await this.productService.getBySlug(req.params.slug);
     if (!product) {
       res.status(404).json({ error: 'Product not found' });
@@ -28,7 +32,7 @@ export class ProductController {
     res.json(product);
   }
 
-  async create(req: Request, res: Response): Promise<void> {
+  public async create(req: Request, res: Response): Promise<void> {
     const product = await this.productService.create(req.body);
     res.status(201).json(product);
   }

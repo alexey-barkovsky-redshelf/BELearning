@@ -3,7 +3,7 @@ import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
 import type { Category } from '../Types/category.types.js';
 
 export class CategoryService {
-  async list(): Promise<Category[]> {
+  public async list(): Promise<Category[]> {
     return PRODUCT_CATEGORY_CODES.map((code: ProductCategoryCode) => ({ code }));
   }
 }

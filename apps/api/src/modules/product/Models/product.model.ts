@@ -14,47 +14,67 @@ function validateCategories(categories?: ProductCategoryCode[]): ProductCategory
 }
 
 export class Product {
-  private constructor(
-    public readonly id: string,
-    private _name: string,
-    private readonly _slug: Slug,
-    private readonly _price: Money,
-    public readonly createdAt: string,
-    public readonly updatedAt: string,
-    private _description?: string,
-    private readonly _categories?: ProductCategoryCode[],
-    private readonly _manufacturer?: string
-  ) {}
+  public readonly id: string;
+  private _name: string;
+  private readonly _slug: Slug;
+  private readonly _price: Money;
+  public readonly createdAt: string;
+  public readonly updatedAt: string;
+  private _description?: string;
+  private readonly _categories?: ProductCategoryCode[];
+  private readonly _manufacturer?: string;
 
-  get name(): string {
+  private constructor(
+    id: string,
+    name: string,
+    slug: Slug,
+    price: Money,
+    createdAt: string,
+    updatedAt: string,
+    description?: string,
+    categories?: ProductCategoryCode[],
+    manufacturer?: string
+  ) {
+    this.id = id;
+    this._name = name;
+    this._slug = slug;
+    this._price = price;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this._description = description;
+    this._categories = categories;
+    this._manufacturer = manufacturer;
+  }
+
+  public get name(): string {
     return this._name;
   }
 
-  get slug(): string {
+  public get slug(): string {
     return this._slug.toString();
   }
 
-  get price(): number {
+  public get price(): number {
     return this._price.getAmount();
   }
 
-  get currency(): string {
+  public get currency(): string {
     return this._price.getCurrency();
   }
 
-  get description(): string | undefined {
+  public get description(): string | undefined {
     return this._description;
   }
 
-  get categories(): ProductCategoryCode[] | undefined {
+  public get categories(): ProductCategoryCode[] | undefined {
     return this._categories?.length ? [...this._categories] : undefined;
   }
 
-  get manufacturer(): string | undefined {
+  public get manufacturer(): string | undefined {
     return this._manufacturer?.trim() || undefined;
   }
 
-  static create(params: {
+  public static create(params: {
     id: string;
     name: string;
     slug: string;
@@ -86,7 +106,7 @@ export class Product {
     );
   }
 
-  static fromPlain(data: IProduct): Product {
+  public static fromPlain(data: IProduct): Product {
     const name = data.name?.trim();
     if (!name) {
       throw new InvalidProductError('Product name is required.');
@@ -107,7 +127,7 @@ export class Product {
     );
   }
 
-  toJSON(): IProduct {
+  public toJSON(): IProduct {
     return {
       id: this.id,
       name: this._name,

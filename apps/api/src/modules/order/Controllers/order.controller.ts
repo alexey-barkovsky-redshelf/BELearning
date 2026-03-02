@@ -24,9 +24,13 @@ function assertCreateOrderBody(body: unknown): asserts body is { userId: string;
 }
 
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  private readonly orderService: OrderService;
 
-  async create(req: Request, res: Response): Promise<void> {
+  public constructor(orderService: OrderService) {
+    this.orderService = orderService;
+  }
+
+  public async create(req: Request, res: Response): Promise<void> {
     try {
       assertCreateOrderBody(req.body);
     } catch (e) {
@@ -38,7 +42,7 @@ export class OrderController {
     res.status(201).json(order);
   }
 
-  async getById(req: Request, res: Response): Promise<void> {
+  public async getById(req: Request, res: Response): Promise<void> {
     const order = await this.orderService.getById(req.params.id);
     if (!order) {
       res.status(404).json({ error: 'Order not found' });
@@ -47,12 +51,12 @@ export class OrderController {
     res.json(order);
   }
 
-  async getByUserId(req: Request, res: Response): Promise<void> {
+  public async getByUserId(req: Request, res: Response): Promise<void> {
     const orders = await this.orderService.getByUserId(req.params.userId);
     res.json(orders);
   }
 
-  async markPaid(req: Request, res: Response): Promise<void> {
+  public async markPaid(req: Request, res: Response): Promise<void> {
     const order = await this.orderService.markPaid(req.params.id);
     if (!order) {
       res.status(404).json({ error: 'Order not found' });

@@ -3,9 +3,13 @@ import { InvalidSlugError, InvalidMoneyError } from '../Errors/product.errors.js
 const SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export class Slug {
-  private constructor(private readonly value: string) {}
+  private readonly value: string;
 
-  static create(input: string): Slug {
+  private constructor(value: string) {
+    this.value = value;
+  }
+
+  public static create(input: string): Slug {
     const normalized = input.trim().toLowerCase().replace(/\s+/g, '-');
     if (!normalized) {
       throw new InvalidSlugError(input);
@@ -16,18 +20,18 @@ export class Slug {
     return new Slug(normalized);
   }
 
-  static fromExisting(value: string): Slug {
+  public static fromExisting(value: string): Slug {
     if (!value || !SLUG_REGEX.test(value)) {
       throw new InvalidSlugError(value);
     }
     return new Slug(value);
   }
 
-  toString(): string {
+  public toString(): string {
     return this.value;
   }
 
-  equals(other: Slug): boolean {
+  public equals(other: Slug): boolean {
     return this.value === other.value;
   }
 }
@@ -36,12 +40,15 @@ const DEFAULT_CURRENCY = 'USD';
 const SUPPORTED_CURRENCIES = new Set(['USD', 'EUR', 'GBP']);
 
 export class Money {
-  private constructor(
-    private readonly amount: number,
-    private readonly currency: string
-  ) {}
+  private readonly amount: number;
+  private readonly currency: string;
 
-  static create(amount: number, currency: string = DEFAULT_CURRENCY): Money {
+  private constructor(amount: number, currency: string) {
+    this.amount = amount;
+    this.currency = currency;
+  }
+
+  public static create(amount: number, currency: string = DEFAULT_CURRENCY): Money {
     if (typeof amount !== 'number' || !Number.isFinite(amount)) {
       throw new InvalidMoneyError('Amount must be a finite number.');
     }
@@ -55,26 +62,26 @@ export class Money {
     return new Money(Math.round(amount * 100) / 100, code);
   }
 
-  static fromExisting(amount: number, currency: string): Money {
+  public static fromExisting(amount: number, currency: string): Money {
     if (typeof amount !== 'number' || !Number.isFinite(amount) || amount < 0) {
       throw new InvalidMoneyError('Invalid amount.');
     }
     return new Money(amount, currency);
   }
 
-  getAmount(): number {
+  public getAmount(): number {
     return this.amount;
   }
 
-  getCurrency(): string {
+  public getCurrency(): string {
     return this.currency;
   }
 
-  toJSON(): { amount: number; currency: string } {
+  public toJSON(): { amount: number; currency: string } {
     return { amount: this.amount, currency: this.currency };
   }
 
-  equals(other: Money): boolean {
+  public equals(other: Money): boolean {
     return this.amount === other.amount && this.currency === other.currency;
   }
 }

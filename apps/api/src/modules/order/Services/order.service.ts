@@ -3,9 +3,13 @@ import { Order } from '../Models/order.model.js';
 import type { IOrderRepository } from '../Types/order.types.js';
 
 export class OrderService {
-  constructor(private readonly orderRepository: IOrderRepository) {}
+  private readonly orderRepository: IOrderRepository;
 
-  async create(
+  public constructor(orderRepository: IOrderRepository) {
+    this.orderRepository = orderRepository;
+  }
+
+  public async create(
     userId: string,
     items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>,
     currency?: string
@@ -23,17 +27,17 @@ export class OrderService {
     return order.toJSON();
   }
 
-  async getById(id: string): Promise<IOrder | null> {
+  public async getById(id: string): Promise<IOrder | null> {
     const order = await this.orderRepository.findById(id);
     return order?.toJSON() ?? null;
   }
 
-  async getByUserId(userId: string): Promise<IOrder[]> {
+  public async getByUserId(userId: string): Promise<IOrder[]> {
     const orders = await this.orderRepository.findByUserId(userId);
     return orders.map((o) => o.toJSON());
   }
 
-  async markPaid(orderId: string): Promise<IOrder | null> {
+  public async markPaid(orderId: string): Promise<IOrder | null> {
     const order = await this.orderRepository.findById(orderId);
     if (!order) {
       return null;

@@ -2,9 +2,13 @@ import type { Request, Response } from 'express';
 import { CategoryService } from '../Services/category.service.js';
 
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  private readonly categoryService: CategoryService;
 
-  async list(_req: Request, res: Response): Promise<void> {
+  public constructor(categoryService: CategoryService) {
+    this.categoryService = categoryService;
+  }
+
+  public async list(_req: Request, res: Response): Promise<void> {
     const list = await this.categoryService.list();
     res.json(list);
   }

@@ -3,26 +3,30 @@ import { Product } from '../Models/product.model.js';
 import type { IProductRepository } from '../Types/product.types.js';
 
 export class ProductService {
-  constructor(private readonly productRepository: IProductRepository) {}
+  private readonly productRepository: IProductRepository;
 
-  async list(category?: string): Promise<IProduct[]> {
+  public constructor(productRepository: IProductRepository) {
+    this.productRepository = productRepository;
+  }
+
+  public async list(category?: string): Promise<IProduct[]> {
     const list = category
       ? await this.productRepository.findByCategory(category)
       : await this.productRepository.findAll();
     return list.map((p) => p.toJSON());
   }
 
-  async getById(id: string): Promise<IProduct | null> {
+  public async getById(id: string): Promise<IProduct | null> {
     const product = await this.productRepository.findById(id);
     return product?.toJSON() ?? null;
   }
 
-  async getBySlug(slug: string): Promise<IProduct | null> {
+  public async getBySlug(slug: string): Promise<IProduct | null> {
     const product = await this.productRepository.findBySlug(slug);
     return product?.toJSON() ?? null;
   }
 
-  async create(data: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
+  public async create(data: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
     const now = new Date().toISOString();
     const product = Product.create({
       id: crypto.randomUUID(),
