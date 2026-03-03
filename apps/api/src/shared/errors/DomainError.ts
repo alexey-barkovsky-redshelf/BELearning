@@ -1,9 +1,9 @@
 export class DomainError extends Error {
-  constructor(
-    message: string,
-    public readonly code: string
-  ) {
+  public readonly code: string;
+
+  public constructor(message: string, code: string) {
     super(message);
+    this.code = code;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, (this.constructor as typeof DomainError).prototype);
   }

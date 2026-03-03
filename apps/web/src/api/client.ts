@@ -1,5 +1,5 @@
-import type { Product, ProductCategoryCode, OrderItem, Order } from '@belearning/shared';
-import { PRODUCT_CATEGORY_CODES } from '@belearning/shared';
+import type { Product, ProductCategoryCode, OrderItem, Order, Category } from '@belearning/shared';
+import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
 
 const BASE = (import.meta as { env?: { VITE_API_BASE?: string } }).env?.VITE_API_BASE ?? '/api';
 
@@ -26,10 +26,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export type { Product, ProductCategoryCode, OrderItem, Order };
+export type { Product, ProductCategoryCode, OrderItem, Order, Category };
 export { PRODUCT_CATEGORY_CODES };
-
-export type Category = { code: string };
 
 export const api = {
   getCategories: () => request<Category[]>('/categories'),

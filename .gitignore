@@ -11,6 +11,9 @@ build/
 .env.local
 .env.*.local
 
+# SQLite (optional: remove if you want to commit dev DB)
+apps/api/prisma/*.db
+
 # IDE / OS
 .idea/
 .vscode/

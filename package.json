@@ -14,8 +14,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "build:shared": "yarn workspace @belearning/shared build",
-    "dev:api": "yarn workspace @belearning/shared build && yarn workspace @belearning/api dev",
-    "dev:web": "yarn workspace @belearning/shared build && yarn workspace @belearning/web dev"
+    "build:utils": "yarn workspace @belearning/utils build",
+    "dev:api": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/api dev",
+    "dev:web": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/web dev"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

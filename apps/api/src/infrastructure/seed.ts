@@ -1,6 +1,6 @@
-import { PRODUCT_CATEGORY } from '@belearning/shared';
-import { Product } from '../modules/product/product.model.js';
-import type { IProductRepository } from '../modules/product/product.types.js';
+import { PRODUCT_CATEGORY } from '@belearning/utils';
+import { Product } from '../modules/product/Models/index.js';
+import type { IProductRepository } from '../modules/product/Types/index.js';
 
 function now(): string {
   return new Date().toISOString();
@@ -102,6 +102,10 @@ export async function seedMockData(productRepository: IProductRepository): Promi
     }),
   ];
 
+  const existing = await productRepository.findAll();
+  if (existing.length > 0) {
+    return;
+  }
   for (const product of products) {
     await productRepository.save(product);
   }

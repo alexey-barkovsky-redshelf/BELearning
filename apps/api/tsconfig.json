@@ -4,7 +4,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "noEmit": false,
-    "module": "ESNext",
+    "module": "Node16",
     "moduleResolution": "node16"
   },
   "include": ["src/**/*"]

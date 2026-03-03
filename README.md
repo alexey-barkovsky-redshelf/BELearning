@@ -9,7 +9,8 @@ apps/
   api/     — Express API (MVC + repository pattern)
   web/     — React + Vite frontend
 packages/
-  shared/  — Shared types and constants (@belearning/shared)
+  shared/  — Shared types and interfaces (@belearning/shared)
+  utils/   — Constants and utilities (@belearning/utils)
 ```
 
 ### API
@@ -32,6 +33,7 @@ packages/
 ```bash
 yarn install
 yarn workspace @belearning/shared build
+yarn workspace @belearning/utils build
 ```
 
 ## Scripts

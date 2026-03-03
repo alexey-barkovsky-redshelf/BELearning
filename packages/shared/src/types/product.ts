@@ -1,18 +1,13 @@
-export const PRODUCT_CATEGORY = {
-  HEALTH: 'health',
-  SPORT: 'sport',
-  HOBBY: 'hobby',
-  PROMOTIONS: 'promotions',
-  FOR_MEN: 'for_men',
-  FOR_WOMEN: 'for_women',
-  FOR_CHILDREN: 'for_children',
-  FOOD: 'food',
-  BOOKS: 'books',
-} as const;
-
-export type ProductCategoryCode = (typeof PRODUCT_CATEGORY)[keyof typeof PRODUCT_CATEGORY];
-
-export const PRODUCT_CATEGORY_CODES: readonly ProductCategoryCode[] = Object.values(PRODUCT_CATEGORY);
+export type ProductCategoryCode =
+  | 'health'
+  | 'sport'
+  | 'hobby'
+  | 'promotions'
+  | 'for_men'
+  | 'for_women'
+  | 'for_children'
+  | 'food'
+  | 'books';
 
 export interface Product {
   id: string;
