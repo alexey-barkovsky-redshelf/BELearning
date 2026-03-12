@@ -4,7 +4,7 @@ import { api, type Order } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';
 import { useAsync } from '../hooks/useAsync';
-import { getStatusLabel } from '../utils/status';
+import { StatusHelper } from '../utils/statusHelper';
 
 export function OrderList() {
   const { t } = useTranslation();
@@ -66,7 +66,7 @@ export function OrderList() {
                 <div className="order-header">
                   <span>{t('orders.orderId', { id: o.id.slice(0, 8) })}</span>
                   <span className={`status status-${o.status}`}>
-                    {getStatusLabel(o.status, t)}
+                    {StatusHelper.getStatusLabel(o.status, t)}
                   </span>
                 </div>
                 <p>

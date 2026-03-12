@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useTranslation } from '../context/LocaleContext';
 import { PageShell } from '../components/PageShell';
 import { EmptyState } from '../components/EmptyState';
-import { formatMoney } from '../utils/format';
+import { FormatHelper } from '../utils/formatHelper';
 
 export function Cart() {
   const { t } = useTranslation();
@@ -36,7 +36,7 @@ export function Cart() {
               <button type="button" className="cart-qty-btn" onClick={() => setQuantity(i.productId, i.quantity + 1)} aria-label="+">+</button>
             </span>
             <span className="cart-row-price">
-              {formatMoney(i.priceAtPurchase * i.quantity, currency)}
+              {FormatHelper.formatMoney(i.priceAtPurchase * i.quantity, currency)}
             </span>
             <button type="button" className="button small" onClick={() => removeItem(i.productId)}>
               {t('orderCreate.remove')}
@@ -45,7 +45,7 @@ export function Cart() {
         ))}
       </ul>
       <p className="total">
-        {t('orderCreate.total')} {formatMoney(sum, currency)}
+        {t('orderCreate.total')} {FormatHelper.formatMoney(sum, currency)}
       </p>
       <div className="cart-actions">
         <button type="button" className="button button-secondary" onClick={() => clear()}>

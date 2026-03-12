@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { PageShell } from '../components/PageShell';
-import { formatMoney } from '../utils/format';
+import { FormatHelper } from '../utils/formatHelper';
 
 export function OrderCreate() {
   const { t } = useTranslation();
@@ -112,7 +112,7 @@ export function OrderCreate() {
                     <span>{i.productTitle}</span>
                     <span>× {i.quantity}</span>
                     <span>
-                      {formatMoney(i.priceAtPurchase * i.quantity, currency)}
+                      {FormatHelper.formatMoney(i.priceAtPurchase * i.quantity, currency)}
                     </span>
                     <button
                       type="button"
@@ -128,7 +128,7 @@ export function OrderCreate() {
               })}
             </ul>
             <p className="total">
-              {t('orderCreate.total')} {formatMoney(total, currency)}
+              {t('orderCreate.total')} {FormatHelper.formatMoney(total, currency)}
             </p>
             <button type="submit" className="button" disabled={submitting}>
               {submitting ? t('orderCreate.submitting') : t('orderCreate.submit')}

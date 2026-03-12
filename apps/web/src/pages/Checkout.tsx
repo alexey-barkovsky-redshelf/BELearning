@@ -6,7 +6,7 @@ import { useCart } from '../context/CartContext';
 import { useTranslation } from '../context/LocaleContext';
 import { PageShell } from '../components/PageShell';
 import { EmptyState } from '../components/EmptyState';
-import { formatMoney } from '../utils/format';
+import { FormatHelper } from '../utils/formatHelper';
 
 export function Checkout() {
   const { t } = useTranslation();
@@ -55,14 +55,14 @@ export function Checkout() {
             <span className="checkout-item-title">{i.productTitle}</span>
             <span className="checkout-item-qty">× {i.quantity}</span>
             <span className="checkout-item-price">
-              {formatMoney(i.priceAtPurchase * i.quantity, currency)}
+              {FormatHelper.formatMoney(i.priceAtPurchase * i.quantity, currency)}
             </span>
           </li>
         ))}
       </ul>
 
       <p className="total">
-        {t('orderCreate.total')} {formatMoney(sum, currency)} · {t('orders.itemsCount', { count: items.length })}
+        {t('orderCreate.total')} {FormatHelper.formatMoney(sum, currency)} · {t('orders.itemsCount', { count: items.length })}
       </p>
 
       {!isLoggedIn ? (

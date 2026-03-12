@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { api, type Category } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
 import { useAsync } from '../hooks/useAsync';
-import { getCategoryImageUrl } from '../config/categoryImages';
+import { CategoryImageHelper } from '../config/categoryImageHelper';
 
 export function Dashboard() {
   const { t } = useTranslation();
@@ -46,7 +46,7 @@ export function Dashboard() {
             to="/products"
             className="dashboard-tile"
             data-category="all"
-            style={{ backgroundImage: `url(${getCategoryImageUrl('all')})` }}
+            style={{ backgroundImage: `url(${CategoryImageHelper.getUrl('all')})` }}
           >
             <span className="dashboard-tile-title">{t('categories.all')}</span>
             <span className="dashboard-tile-desc">{t('dashboard.tiles.allDesc')}</span>
@@ -57,7 +57,7 @@ export function Dashboard() {
               to={`/products?category=${encodeURIComponent(cat.code)}`}
               className="dashboard-tile"
               data-category={cat.code}
-              style={{ backgroundImage: `url(${getCategoryImageUrl(cat.code)})` }}
+              style={{ backgroundImage: `url(${CategoryImageHelper.getUrl(cat.code)})` }}
             >
               <span className="dashboard-tile-title">{t(`categories.${cat.code}`)}</span>
               <span className="dashboard-tile-desc">{t(`dashboard.tiles.${cat.code}Desc`)}</span>
