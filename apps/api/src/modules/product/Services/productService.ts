@@ -1,29 +1,22 @@
 import type { Product as IProduct } from '@belearning/shared';
+import { BaseEntityService } from '../../../shared/services/index.js';
 import { Product } from '../Models/index.js';
 import type { IProductRepository } from '../Types/index.js';
 
-export class ProductService {
-  private readonly productRepository: IProductRepository;
-
-  public constructor(productRepository: IProductRepository) {
-    this.productRepository = productRepository;
+export class ProductService extends BaseEntityService<Product, IProduct, IProductRepository> {
+  public constructor(repository: IProductRepository) {
+    super(repository);
   }
 
   public async list(category?: string): Promise<IProduct[]> {
     const list = category
-      ? await this.productRepository.findByCategory(category)
-      : await this.productRepository.findAll();
-    return list.map((p) => p.toJSON());
-  }
-
-  public async getById(id: string): Promise<IProduct | null> {
-    const product = await this.productRepository.findById(id);
-    return product?.toJSON() ?? null;
+      ? await this.repository.findByCategory(category)
+      : await this.repository.findAll();
+    return this.toPlains(list);
   }
 
   public async getBySlug(slug: string): Promise<IProduct | null> {
-    const product = await this.productRepository.findBySlug(slug);
-    return product?.toJSON() ?? null;
+    return this.toPlain(await this.repository.findBySlug(slug));
   }
 
   public async create(data: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
@@ -39,7 +32,7 @@ export class ProductService {
       createdAt: now,
       updatedAt: now,
     });
-    await this.productRepository.save(product);
+    await this.repository.save(product);
     return product.toJSON();
   }
 }

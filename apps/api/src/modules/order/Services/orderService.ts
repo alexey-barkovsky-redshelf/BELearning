@@ -1,12 +1,11 @@
 import type { Order as IOrder } from '@belearning/shared';
+import { BaseEntityService } from '../../../shared/services/index.js';
 import { Order } from '../Models/index.js';
 import type { IOrderRepository } from '../Types/index.js';
 
-export class OrderService {
-  private readonly orderRepository: IOrderRepository;
-
-  public constructor(orderRepository: IOrderRepository) {
-    this.orderRepository = orderRepository;
+export class OrderService extends BaseEntityService<Order, IOrder, IOrderRepository> {
+  public constructor(repository: IOrderRepository) {
+    super(repository);
   }
 
   public async create(
@@ -23,27 +22,21 @@ export class OrderService {
       createdAt: now,
       updatedAt: now,
     });
-    await this.orderRepository.save(order);
+    await this.repository.save(order);
     return order.toJSON();
   }
 
-  public async getById(id: string): Promise<IOrder | null> {
-    const order = await this.orderRepository.findById(id);
-    return order?.toJSON() ?? null;
-  }
-
   public async getByUserId(userId: string): Promise<IOrder[]> {
-    const orders = await this.orderRepository.findByUserId(userId);
-    return orders.map((o) => o.toJSON());
+    return this.toPlains(await this.repository.findByUserId(userId));
   }
 
   public async markPaid(orderId: string): Promise<IOrder | null> {
-    const order = await this.orderRepository.findById(orderId);
+    const order = await this.repository.findById(orderId);
     if (!order) {
       return null;
     }
     order.markPaid();
-    await this.orderRepository.save(order);
-    return order.toJSON();
+    await this.repository.save(order);
+    return this.toPlain(order);
   }
 }

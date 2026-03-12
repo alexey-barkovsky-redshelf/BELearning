@@ -1,11 +1,10 @@
 import type { Request, Response } from 'express';
+import { BaseController } from '../../../shared/controllers/index.js';
 import { ProductService } from '../Services/index.js';
 
-export class ProductController {
-  private readonly productService: ProductService;
-
-  public constructor(productService: ProductService) {
-    this.productService = productService;
+export class ProductController extends BaseController {
+  public constructor(private readonly productService: ProductService) {
+    super();
   }
 
   public async list(req: Request, res: Response): Promise<void> {
@@ -15,12 +14,7 @@ export class ProductController {
   }
 
   public async getById(req: Request, res: Response): Promise<void> {
-    const product = await this.productService.getById(req.params.id);
-    if (!product) {
-      res.status(404).json({ error: 'Product not found' });
-      return;
-    }
-    res.json(product);
+    await this.getByIdAndSend(req, res, 'Product', (id) => this.productService.getById(id));
   }
 
   public async getBySlug(req: Request, res: Response): Promise<void> {
