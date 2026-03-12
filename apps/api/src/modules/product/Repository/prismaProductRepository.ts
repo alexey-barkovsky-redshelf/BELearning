@@ -97,4 +97,26 @@ export class PrismaProductRepository implements IProductRepository {
       return false;
     }
   }
+
+  public async saveMany(entities: Product[]): Promise<void> {
+    if (entities.length === 0) {
+      return;
+    }
+    const data = entities.map((entity) => {
+      const d = entity.toJSON();
+      return {
+        id: d.id,
+        name: d.name,
+        slug: d.slug,
+        description: d.description ?? null,
+        price: d.price,
+        currency: d.currency,
+        categories: d.categories?.length ? JSON.stringify(d.categories) : null,
+        manufacturer: d.manufacturer ?? null,
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt,
+      };
+    });
+    await this.prisma.product.createMany({ data });
+  }
 }

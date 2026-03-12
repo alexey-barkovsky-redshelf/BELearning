@@ -1,1 +1,1 @@
-export { HealthService } from './health.service.js';
+export { HealthService } from './healthService.js';

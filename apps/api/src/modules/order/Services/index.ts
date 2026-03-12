@@ -1,1 +1,1 @@
-export { OrderService } from './order.service.js';
+export { OrderService } from './orderService.js';

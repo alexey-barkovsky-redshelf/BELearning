@@ -1,1 +1,2 @@
-export { InvalidEmailError, InvalidUserError } from './user.errors.js';
+export { InvalidEmailError } from './invalidEmailError.js';
+export { InvalidUserError } from './invalidUserError.js';

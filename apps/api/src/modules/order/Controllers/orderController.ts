@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { BaseController } from '../../../shared/controllers/index.js';
 import { OrderService } from '../Services/index.js';
 
 function assertCreateOrderBody(body: unknown): asserts body is { userId: string; items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>; currency?: string } {
@@ -23,11 +24,9 @@ function assertCreateOrderBody(body: unknown): asserts body is { userId: string;
   }
 }
 
-export class OrderController {
-  private readonly orderService: OrderService;
-
-  public constructor(orderService: OrderService) {
-    this.orderService = orderService;
+export class OrderController extends BaseController {
+  public constructor(private readonly orderService: OrderService) {
+    super();
   }
 
   public async create(req: Request, res: Response): Promise<void> {
@@ -43,12 +42,7 @@ export class OrderController {
   }
 
   public async getById(req: Request, res: Response): Promise<void> {
-    const order = await this.orderService.getById(req.params.id);
-    if (!order) {
-      res.status(404).json({ error: 'Order not found' });
-      return;
-    }
-    res.json(order);
+    await this.getByIdAndSend(req, res, 'Order', (id) => this.orderService.getById(id));
   }
 
   public async getByUserId(req: Request, res: Response): Promise<void> {

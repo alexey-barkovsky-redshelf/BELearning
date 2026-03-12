@@ -1,1 +1,1 @@
-export { Email } from './user.value-objects.js';
+export { Email } from './userValueObjects.js';

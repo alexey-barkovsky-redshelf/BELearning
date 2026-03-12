@@ -4,7 +4,7 @@ import { useUser } from '../context/UserContext';
 import { useTranslation, useLocale } from '../context/LocaleContext';
 import { useCurrency, CURRENCY_OPTIONS, type CurrencyCode } from '../context/CurrencyContext';
 import { useAsync } from '../hooks/useAsync';
-import { getStatusLabel } from '../utils/status';
+import { StatusHelper } from '../utils/statusHelper';
 
 type Lang = 'en' | 'ru';
 
@@ -108,7 +108,7 @@ export function Profile() {
                 <div className="order-header">
                   <span>{t('orders.orderId', { id: o.id.slice(0, 8) })}</span>
                   <span className={`status status-${o.status}`}>
-                    {getStatusLabel(o.status, t)}
+                    {StatusHelper.getStatusLabel(o.status, t)}
                   </span>
                 </div>
                 <p>

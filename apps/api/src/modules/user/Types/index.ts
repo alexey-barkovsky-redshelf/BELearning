@@ -1,1 +1,1 @@
-export type { UserDto } from './user.types.js';
+export type { UserDto } from './userTypes.js';

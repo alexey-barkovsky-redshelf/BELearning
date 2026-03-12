@@ -1,1 +1,2 @@
-export { Order, OrderItem } from './order.model.js';
+export { OrderItem } from './orderItem.js';
+export { Order } from './order.js';

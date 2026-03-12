@@ -1,1 +1,1 @@
-export { createCategoryRoutes } from './category.routes.js';
+export { createCategoryRoutes } from './categoryRoutes.js';

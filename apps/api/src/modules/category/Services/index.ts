@@ -1,1 +1,1 @@
-export { CategoryService } from './category.service.js';
+export { CategoryService } from './categoryService.js';

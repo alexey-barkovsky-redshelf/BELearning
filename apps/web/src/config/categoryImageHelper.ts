@@ -14,7 +14,9 @@ export const CATEGORY_IMAGE_MAP: Record<string, string> = {
   books: 'category-books.png',
 };
 
-export function getCategoryImageUrl(categoryCode: string): string {
-  const filename = CATEGORY_IMAGE_MAP[categoryCode];
-  return filename ? `${CATEGORIES_BASE}/${filename}` : DEFAULT_CATEGORY_IMAGE;
+export class CategoryImageHelper {
+  public static getUrl(categoryCode: string): string {
+    const filename = CATEGORY_IMAGE_MAP[categoryCode];
+    return filename ? `${CATEGORIES_BASE}/${filename}` : DEFAULT_CATEGORY_IMAGE;
+  }
 }
