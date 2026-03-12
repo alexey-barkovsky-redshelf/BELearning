@@ -2,41 +2,15 @@ import type { PrismaClient } from '@prisma/client';
 import { Order } from '../Models/index.js';
 import type { IOrderRepository } from '../Types/index.js';
 
-function rowToOrder(row: {
+type OrderRowWithItems = {
   id: string;
   userId: string;
   status: string;
   currency: string;
   createdAt: string;
   updatedAt: string;
-  items: Array<{
-    productId: string;
-    productTitle: string;
-    priceAtPurchase: number;
-    quantity: number;
-  }>;
-}): Order {
-  const items = row.items.map((i) => ({
-    productId: i.productId,
-    productTitle: i.productTitle,
-    priceAtPurchase: i.priceAtPurchase,
-    quantity: i.quantity,
-  }));
-  const totalAmount = items.reduce(
-    (sum, i) => sum + i.priceAtPurchase * i.quantity,
-    0
-  );
-  return Order.fromPlain({
-    id: row.id,
-    userId: row.userId,
-    status: row.status as 'draft' | 'paid' | 'cancelled',
-    currency: row.currency,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    items,
-    totalAmount,
-  });
-}
+  items: Array<{ productId: string; productTitle: string; priceAtPurchase: number; quantity: number }>;
+};
 
 export class PrismaOrderRepository implements IOrderRepository {
   public constructor(private readonly prisma: PrismaClient) {}
@@ -44,17 +18,37 @@ export class PrismaOrderRepository implements IOrderRepository {
   public async findById(id: string): Promise<Order | null> {
     const row = await this.prisma.order.findUnique({
       where: { id },
-      include: { items: true },
+      include: { items: { select: { productId: true, productTitle: true, priceAtPurchase: true, quantity: true } } },
     });
-    return row ? rowToOrder(row) : null;
+    return row ? Order.fromPlain(this.toPlain(row)) : null;
   }
 
   public async findByUserId(userId: string): Promise<Order[]> {
     const rows = await this.prisma.order.findMany({
       where: { userId },
-      include: { items: true },
+      include: { items: { select: { productId: true, productTitle: true, priceAtPurchase: true, quantity: true } } },
     });
-    return rows.map((row) => rowToOrder(row));
+    return rows.map((row) => Order.fromPlain(this.toPlain(row)));
+  }
+
+  private toPlain(row: OrderRowWithItems): Parameters<typeof Order.fromPlain>[0] {
+    const items = row.items.map(({ productId, productTitle, priceAtPurchase, quantity }) => ({
+      productId,
+      productTitle,
+      priceAtPurchase,
+      quantity,
+    }));
+    const totalAmount = items.reduce((sum, i) => sum + i.priceAtPurchase * i.quantity, 0);
+    return {
+      id: row.id,
+      userId: row.userId,
+      status: row.status as 'draft' | 'paid' | 'cancelled',
+      currency: row.currency,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      items,
+      totalAmount,
+    };
   }
 
   public async save(order: Order): Promise<Order> {
