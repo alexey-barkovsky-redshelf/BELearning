@@ -1,1 +1,1 @@
-export type { IProductRepository } from './product.types.js';
+export type { IProductRepository } from './productTypes.js';

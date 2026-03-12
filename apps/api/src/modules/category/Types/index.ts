@@ -1,1 +1,1 @@
-export type { Category } from './category.types.js';
+export type { Category } from './categoryTypes.js';

@@ -1,1 +1,1 @@
-export { CategoryController } from './category.controller.js';
+export { CategoryController } from './categoryController.js';

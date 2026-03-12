@@ -1,1 +1,1 @@
-export { BaseEntity } from './base.entity.js';
+export { BaseEntity } from './baseEntity.js';

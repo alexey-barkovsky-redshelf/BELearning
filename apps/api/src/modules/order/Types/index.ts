@@ -1,1 +1,1 @@
-export type { IOrderRepository } from './order.types.js';
+export type { IOrderRepository } from './orderTypes.js';

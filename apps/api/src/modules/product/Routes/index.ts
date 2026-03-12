@@ -1,1 +1,1 @@
-export { createProductRoutes } from './product.routes.js';
+export { createProductRoutes } from './productRoutes.js';

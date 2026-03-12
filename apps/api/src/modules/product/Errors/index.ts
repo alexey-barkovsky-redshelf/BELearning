@@ -1,1 +1,1 @@
-export { InvalidSlugError, InvalidMoneyError, InvalidProductError } from './product.errors.js';
+export { InvalidSlugError, InvalidMoneyError, InvalidProductError } from './productErrors.js';

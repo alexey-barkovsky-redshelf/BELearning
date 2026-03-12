@@ -1,1 +1,1 @@
-export { Slug, Money } from './product.value-objects.js';
+export { Slug, Money } from './productValueObjects.js';
