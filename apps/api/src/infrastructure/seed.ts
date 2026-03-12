@@ -106,7 +106,5 @@ export async function seedMockData(productRepository: IProductRepository): Promi
   if (existing.length > 0) {
     return;
   }
-  for (const product of products) {
-    await productRepository.save(product);
-  }
+  await productRepository.saveMany(products);
 }

@@ -67,15 +67,15 @@ export class PrismaOrderRepository implements IOrderRepository {
             updatedAt: plain.updatedAt,
           },
         });
-        for (const item of plain.items) {
-          await tx.orderItem.create({
-            data: {
+        if (plain.items.length > 0) {
+          await tx.orderItem.createMany({
+            data: plain.items.map((item: { productId: string; productTitle: string; priceAtPurchase: number; quantity: number }) => ({
               orderId: order.id,
               productId: item.productId,
               productTitle: item.productTitle,
               priceAtPurchase: item.priceAtPurchase,
               quantity: item.quantity,
-            },
+            })),
           });
         }
       });

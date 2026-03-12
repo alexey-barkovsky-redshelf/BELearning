@@ -33,4 +33,10 @@ export class InMemoryProductRepository implements IProductRepository {
   public async delete(id: string): Promise<boolean> {
     return this.store.delete(id);
   }
+
+  public async saveMany(entities: Product[]): Promise<void> {
+    for (const entity of entities) {
+      this.store.set(entity.id, entity);
+    }
+  }
 }
