@@ -15,6 +15,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "build:shared": "yarn workspace @belearning/shared build",
     "build:utils": "yarn workspace @belearning/utils build",
+    "test:api": "yarn build:shared && yarn workspace @belearning/api test",
     "dev:api": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/api dev",
     "dev:web": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/web dev"
   },
