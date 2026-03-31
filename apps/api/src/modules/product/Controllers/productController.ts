@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createProductBodySchema, listProductsQuerySchema } from '@belearning/shared';
+import type { CreateProductBody, ListProductsQuery } from '@belearning/shared';
 import { BaseController } from '../../../shared/controllers/index.js';
 import { ProductService } from '../Services/index.js';
 
@@ -9,12 +9,8 @@ export class ProductController extends BaseController {
   }
 
   public async list(req: Request, res: Response): Promise<void> {
-    const parsed = listProductsQuerySchema.safeParse(req.query);
-    if (!parsed.success) {
-      res.status(400).json({ error: 'Validation failed', issues: parsed.error.flatten() });
-      return;
-    }
-    const list = await this.productService.list(parsed.data.category);
+    const { category } = req.validatedQuery as ListProductsQuery;
+    const list = await this.productService.list(category);
     res.json(list);
   }
 
@@ -32,12 +28,7 @@ export class ProductController extends BaseController {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const parsed = createProductBodySchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: 'Validation failed', issues: parsed.error.flatten() });
-      return;
-    }
-    const product = await this.productService.create(parsed.data);
+    const product = await this.productService.create(req.validatedBody as CreateProductBody);
     res.status(201).json(product);
   }
 }

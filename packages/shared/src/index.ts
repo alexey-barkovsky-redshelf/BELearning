@@ -17,4 +17,4 @@ export {
   productIdParamSchema,
   productSlugParamSchema,
 } from './schemas/product';
-export type { CreateProductBody } from './schemas/product';
+export type { CreateProductBody, ListProductsQuery } from './schemas/product';

@@ -39,6 +39,8 @@ export const listProductsQuerySchema = z.object({
   category: categoryQueryValue,
 });
 
+export type ListProductsQuery = z.infer<typeof listProductsQuerySchema>;
+
 export const productSlugParamSchema = z.object({
   slug: nonEmptyString,
 });

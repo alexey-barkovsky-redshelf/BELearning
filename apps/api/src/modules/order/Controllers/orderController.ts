@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createOrderBodySchema } from '@belearning/shared';
+import type { CreateOrderBody } from '@belearning/shared';
 import { BaseController } from '../../../shared/controllers/index.js';
 import { OrderService } from '../Services/index.js';
 
@@ -9,12 +9,7 @@ export class OrderController extends BaseController {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const parsed = createOrderBodySchema.safeParse(req.body);
-    if (!parsed.success) {
-      res.status(400).json({ error: 'Validation failed', issues: parsed.error.flatten() });
-      return;
-    }
-    const { userId, items, currency } = parsed.data;
+    const { userId, items, currency } = req.validatedBody as CreateOrderBody;
     const order = await this.orderService.create(userId, items, currency);
     res.status(201).json(order);
   }
