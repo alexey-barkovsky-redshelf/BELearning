@@ -9,9 +9,8 @@ export class ProductController extends BaseController {
   }
 
   public async list(req: Request, res: Response): Promise<void> {
-    const { category } = req.validatedQuery as ListProductsQuery;
-    const list = await this.productService.list(category);
-    res.json(list);
+    const result = await this.productService.list(req.validatedQuery as ListProductsQuery);
+    res.json(result);
   }
 
   public async getById(req: Request, res: Response): Promise<void> {

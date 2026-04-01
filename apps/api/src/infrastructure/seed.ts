@@ -1,15 +1,75 @@
-import { PRODUCT_CATEGORY } from '@belearning/utils';
+import { PRODUCT_CATEGORY, PRODUCT_CATEGORY_CODES } from '@belearning/utils';
+import type { ProductCategoryCode } from '@belearning/shared';
 import { Product } from '../modules/product/Models/index.js';
 import type { IProductRepository } from '../modules/product/Types/index.js';
+
+const BULK_PER_CATEGORY = 50;
+
+const INSERT_CHUNK_DEFAULT = 80;
+
+function insertChunkSize(): number {
+  const raw = process.env.SEED_CHUNK_SIZE;
+  if (raw === undefined || raw === '') {
+    return INSERT_CHUNK_DEFAULT;
+  }
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n < 1) {
+    return INSERT_CHUNK_DEFAULT;
+  }
+  return Math.min(500, n);
+}
+
+export type SeedMockDataResult = {
+  inserted: number;
+};
 
 function now(): string {
   return new Date().toISOString();
 }
 
-export async function seedMockData(productRepository: IProductRepository): Promise<void> {
+function categoryLabel(code: ProductCategoryCode): string {
+  return code
+    .split('_')
+    .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function categorySlugPrefix(code: ProductCategoryCode): string {
+  return code.replaceAll('_', '-');
+}
+
+function buildBulkProducts(createdAt: string): Product[] {
+  const brands = ['SeedCo', 'DemoMart', 'SampleWorks', 'MockGoods', 'TestSupply'];
+  const out: Product[] = [];
+  for (let c = 0; c < PRODUCT_CATEGORY_CODES.length; c++) {
+    const code = PRODUCT_CATEGORY_CODES[c];
+    const prefix = categorySlugPrefix(code);
+    const label = categoryLabel(code);
+    for (let i = 1; i <= BULK_PER_CATEGORY; i++) {
+      const price = Math.min(199.99, Math.round((6.49 + i * 2.17 + c * 1.03) * 100) / 100);
+      out.push(
+        Product.create({
+          id: `seed-${code}-${i}`,
+          name: `${label} sample ${i}`,
+          slug: `${prefix}-sample-${i}`,
+          price,
+          currency: 'USD',
+          description: `Demo product for ${label} catalog (bulk ${i}).`,
+          categories: [code],
+          manufacturer: brands[(i + c) % brands.length],
+          createdAt,
+          updatedAt: createdAt,
+        }),
+      );
+    }
+  }
+  return out;
+}
+
+export async function seedMockData(productRepository: IProductRepository): Promise<SeedMockDataResult> {
   const t = now();
 
-  const products = [
+  const baseProducts = [
     Product.create({
       id: 'mock-product-1',
       name: 'Intro Video',
@@ -103,8 +163,25 @@ export async function seedMockData(productRepository: IProductRepository): Promi
   ];
 
   const existing = await productRepository.findAll();
-  if (existing.length > 0) {
-    return;
+  const existingIds = new Set(existing.map((p) => p.id));
+
+  const baseToAdd = baseProducts.filter((p) => !existingIds.has(p.id));
+  const bulkToAdd = buildBulkProducts(t).filter((p) => !existingIds.has(p.id));
+  const toAdd = [...baseToAdd, ...bulkToAdd];
+
+  if (toAdd.length === 0) {
+    console.info('[seed] mock products: inserted 0 (all ids already present)');
+    return { inserted: 0 };
   }
-  await productRepository.saveMany(products);
+
+  const chunk = insertChunkSize();
+  let inserted = 0;
+  for (let i = 0; i < toAdd.length; i += chunk) {
+    const slice = toAdd.slice(i, i + chunk);
+    await productRepository.saveMany(slice);
+    inserted += slice.length;
+  }
+
+  console.info(`[seed] mock products: inserted ${inserted} (chunk size ${chunk})`);
+  return { inserted };
 }

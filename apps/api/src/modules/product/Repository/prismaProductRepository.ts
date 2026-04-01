@@ -1,6 +1,9 @@
+import type { Prisma } from '@prisma/client';
 import type { PrismaClient } from '@prisma/client';
+import type { ListProductsQuery } from '@belearning/shared';
 import { Product } from '../Models/index.js';
 import type { IProductRepository } from '../Types/index.js';
+import { runProductListPipeline } from './productListHelpers.js';
 
 function rowToProduct(row: {
   id: string;
@@ -57,6 +60,26 @@ export class PrismaProductRepository implements IProductRepository {
         return cats.includes(category);
       })
       .map(rowToProduct);
+  }
+
+  public async listProducts(query: ListProductsQuery): Promise<{ items: Product[]; total: number }> {
+    const where: Prisma.ProductWhereInput = {};
+    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+      where.price = {};
+      if (query.minPrice !== undefined) {
+        where.price.gte = query.minPrice;
+      }
+      if (query.maxPrice !== undefined) {
+        where.price.lte = query.maxPrice;
+      }
+    }
+    if (query.search !== undefined) {
+      const s = query.search;
+      where.OR = [{ name: { contains: s } }, { manufacturer: { contains: s } }];
+    }
+    const rows = await this.prisma.product.findMany({ where });
+    const products = rows.map(rowToProduct);
+    return runProductListPipeline(products, query, 'dbPrefiltered');
   }
 
   public async save(entity: Product): Promise<Product> {

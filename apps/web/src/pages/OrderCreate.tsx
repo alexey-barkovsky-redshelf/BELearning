@@ -18,7 +18,10 @@ export function OrderCreate() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.getProducts().then(setProducts).catch(() => {});
+    api
+      .getProducts({ pageSize: 100 })
+      .then((r) => setProducts(r.items))
+      .catch(() => {});
   }, []);
 
   const addToCart = (p: Product, qty = 1) => {

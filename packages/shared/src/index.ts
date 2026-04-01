@@ -1,8 +1,8 @@
 export type { User } from './types/user';
-export type { Product, ProductCategoryCode } from './types/product';
+export type { PaginatedProducts, Product, ProductCategoryCode } from './types/product';
 export type { Order, OrderItem, OrderStatus } from './types/order';
 export type { Category } from './types/category';
-export { idParamSchema, nonEmptyString } from './schemas/common';
+export { idParamSchema, isEmptyQueryInput, nonEmptyString } from './schemas/common';
 export {
   createOrderBodySchema,
   orderIdParamSchema,
@@ -13,8 +13,18 @@ export type { CreateOrderBody, OrderItemInput } from './schemas/order';
 export {
   createProductBodySchema,
   listProductsQuerySchema,
+  DEFAULT_LIST_PRODUCTS_PAGE_SIZE,
+  LIST_PRODUCTS_CATEGORY_PARAM_MAX_LENGTH,
+  LIST_PRODUCTS_PAGE_SIZES,
+  LIST_PRODUCTS_SEARCH_MAX_LENGTH,
   productCategoryCodeSchema,
   productIdParamSchema,
   productSlugParamSchema,
 } from './schemas/product';
-export type { CreateProductBody, ListProductsQuery } from './schemas/product';
+export type { CreateProductBody, ListProductsPageSize, ListProductsQuery } from './schemas/product';
+export {
+  parseListProductsQueryFromQueryRecord,
+  parseListProductsQueryFromUrlSearchParams,
+  queryRecordFromSearchParamsLike,
+} from './listProductsQueryFromUrl';
+export type { SearchParamsLike } from './listProductsQueryFromUrl';
