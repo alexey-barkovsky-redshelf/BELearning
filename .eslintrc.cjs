@@ -17,6 +17,13 @@ module.exports = {
   ignorePatterns: ['dist', 'build', 'node_modules', '*.cjs'],
   overrides: [
     {
+      files: ['apps/api/**/*.test.ts'],
+      parserOptions: {
+        project: './apps/api/tsconfig.eslint.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
+    {
       files: ['apps/web/vite.config.ts'],
       parserOptions: {
         project: './apps/web/tsconfig.node.json',

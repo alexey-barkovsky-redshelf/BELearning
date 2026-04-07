@@ -1,5 +1,6 @@
 import { Outlet, Link, NavLink } from 'react-router-dom';
 import { APP_NAME } from '@belearning/utils';
+import { MAIN_ELEMENT_ID } from '../constants/layoutIds';
 import { useTranslation } from '../context/LocaleContext';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';
@@ -44,7 +45,7 @@ export function Layout() {
           </span>
         </nav>
       </header>
-      <main className="main">
+      <main id={MAIN_ELEMENT_ID} className="main">
         <Outlet />
       </main>
     </div>

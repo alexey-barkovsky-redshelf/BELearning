@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api, type Product, type OrderItem } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';
@@ -18,7 +18,10 @@ export function OrderCreate() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.getProducts().then(setProducts).catch(() => {});
+    api
+      .getProducts({ pageSize: 100 })
+      .then((r) => setProducts(r.items))
+      .catch(() => {});
   }, []);
 
   const addToCart = (p: Product, qty = 1) => {

@@ -21,3 +21,11 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedProducts {
+  items: Product[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}

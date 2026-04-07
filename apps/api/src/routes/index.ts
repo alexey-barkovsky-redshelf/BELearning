@@ -21,7 +21,15 @@ export class AppRouter {
     const productRepository = new PrismaProductRepository(prisma);
     const orderRepository = new PrismaOrderRepository(prisma);
 
-    await seedMockData(productRepository);
+    const nodeEnv = process.env.NODE_ENV ?? 'development';
+    const seedOnStartup = nodeEnv !== 'production' || process.env.SEED_MOCK_DATA === 'true';
+    if (seedOnStartup) {
+      await seedMockData(productRepository);
+    } else {
+      console.info(
+        '[seed] skipped in production (set SEED_MOCK_DATA=true or run yarn workspace @belearning/api db:seed)',
+      );
+    }
 
     const productService = new ProductService(productRepository);
     const orderService = new OrderService(orderRepository);

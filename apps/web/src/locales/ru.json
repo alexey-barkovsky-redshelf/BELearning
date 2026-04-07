@@ -12,9 +12,38 @@
     "clearAll": "Очистить всё",
     "remove": "Удалить"
   },
+  "pagination": {
+    "label": "Постраничная навигация"
+  },
+  "filterBar": {
+    "search": "Поиск",
+    "searchSubmit": "Искать",
+    "category": "Категории",
+    "selectAll": "Выбрать все",
+    "priceRange": "Цена",
+    "minPrice": "Цена от",
+    "maxPrice": "Цена до",
+    "minPriceShort": "От",
+    "maxPriceShort": "До",
+    "sortBy": "Сортировка",
+    "sortName": "Название",
+    "sortPrice": "Цена",
+    "sortCreatedAt": "Дата",
+    "order": "Порядок",
+    "orderAsc": "По возрастанию",
+    "orderDesc": "По убыванию",
+    "applyPrice": "Применить цену",
+    "resetAll": "Сбросить всё",
+    "toolbar": "Фильтры товаров",
+    "ariaOpenSearch": "Открыть поиск",
+    "ariaOpenCategories": "Открыть категории",
+    "ariaOpenSort": "Открыть сортировку",
+    "ariaOpenPrice": "Диапазон цены"
+  },
   "dashboard": {
     "title": "Главная",
     "searchPlaceholder": "Поиск товаров…",
+    "searchSubmit": "Найти",
     "tiles": {
       "allDesc": "Все товары",
       "healthDesc": "Здоровье и уход за собой",
@@ -88,7 +117,12 @@
     "buy": "Купить",
     "manufacturer": "Производитель",
     "addToFavorites": "В избранное",
-    "removeFromFavorites": "Убрать из избранного"
+    "removeFromFavorites": "Убрать из избранного",
+    "prevPage": "Назад",
+    "nextPage": "Вперёд",
+    "pageInfo": "Стр. {{page}} из {{totalPages}} · {{total}} товаров",
+    "perPage": "На странице",
+    "empty": "Нет товаров по заданным фильтрам."
   },
   "productDetail": {
     "notFound": "Товар не найден",

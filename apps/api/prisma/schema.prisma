@@ -8,16 +8,29 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  name        String
-  slug        String   @unique
-  description String?
-  price       Float
-  currency    String   @default("USD")
-  categories  String?
-  manufacturer String?
-  createdAt   String
-  updatedAt   String
+  id            String            @id @default(uuid())
+  name          String
+  slug          String            @unique
+  description   String?
+  price         Float
+  currency      String            @default("USD")
+  manufacturer  String?
+  createdAt     String
+  updatedAt     String
+  categoryRows  ProductCategory[]
+
+  @@index([name])
+  @@index([price])
+  @@index([createdAt])
+}
+
+model ProductCategory {
+  productId String
+  code      String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, code])
+  @@index([code])
 }
 
 model Order {
@@ -31,11 +44,11 @@ model Order {
 }
 
 model OrderItem {
-  id              String  @id @default(uuid())
-  orderId         String
-  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId       String
-  productTitle    String
+  id               String  @id @default(uuid())
+  orderId          String
+  order            Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId        String
+  productTitle     String
   priceAtPurchase  Float
-  quantity        Int
+  quantity         Int
 }

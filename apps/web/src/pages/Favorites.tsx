@@ -13,7 +13,7 @@ export function Favorites() {
   const { addItem, items: cartItems } = useCart();
   const { favoriteIds, toggleFavorite, clearFavorites } = useFavorites();
 
-  const { data: products = [], loading } = useAsync<Product[]>(
+  const { data: productsData, loading } = useAsync<Product[]>(
     () => {
       if (favoriteIds.length === 0) {
         return Promise.resolve([]);
@@ -23,6 +23,7 @@ export function Favorites() {
     [favoriteIds.join(',')],
     { enabled: favoriteIds.length > 0 }
   );
+  const products = productsData ?? [];
 
   if (favoriteIds.length === 0 && !loading) {
     return (

@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { api, type Category } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
 import { useAsync } from '../hooks/useAsync';
@@ -6,7 +8,9 @@ import { CategoryImageHelper } from '../config/categoryImageHelper';
 
 export function Dashboard() {
   const { t } = useTranslation();
-  const { data: categories = [], loading, error } = useAsync<Category[]>(
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const { data: categoriesData, loading, error } = useAsync<Category[]>(
     () => api.getCategories(),
     [],
     {
@@ -15,6 +19,17 @@ export function Dashboard() {
       },
     }
   );
+  const categories = categoriesData ?? [];
+
+  const onSearchSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const trimmed = searchQuery.trim();
+    if (trimmed) {
+      navigate(`/products?search=${encodeURIComponent(trimmed)}`);
+    } else {
+      navigate('/products');
+    }
+  };
 
   if (error) {
     return (
@@ -29,14 +44,20 @@ export function Dashboard() {
     <div className="page">
       <header className="dashboard-header">
         <h1 className="dashboard-title">{t('dashboard.title')}</h1>
-        <div className="dashboard-search">
+        <form className="dashboard-search-form" onSubmit={onSearchSubmit}>
           <input
             type="search"
             className="dashboard-search-input"
             placeholder={t('dashboard.searchPlaceholder')}
             aria-label={t('dashboard.searchPlaceholder')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            autoComplete="off"
           />
-        </div>
+          <button type="submit" className="button small dashboard-search-submit">
+            {t('dashboard.searchSubmit')}
+          </button>
+        </form>
       </header>
       {loading ? (
         <p className="loading">{t('common.loading')}</p>

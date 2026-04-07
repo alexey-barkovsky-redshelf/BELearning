@@ -1,4 +1,4 @@
-import type { Product as IProduct } from '@belearning/shared';
+import type { ListProductsQuery, PaginatedProducts, Product as IProduct } from '@belearning/shared';
 import { BaseEntityService } from '../../../shared/services/index.js';
 import { Product } from '../Models/index.js';
 import type { IProductRepository } from '../Types/index.js';
@@ -8,11 +8,17 @@ export class ProductService extends BaseEntityService<Product, IProduct, IProduc
     super(repository);
   }
 
-  public async list(category?: string): Promise<IProduct[]> {
-    const list = category
-      ? await this.repository.findByCategory(category)
-      : await this.repository.findAll();
-    return this.toPlains(list);
+  public async list(query: ListProductsQuery): Promise<PaginatedProducts> {
+    const { items, total } = await this.repository.listProducts(query);
+    const { page, pageSize } = query;
+    const totalPages = total === 0 ? 0 : Math.ceil(total / pageSize);
+    return {
+      items: this.toPlains(items),
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
   }
 
   public async getBySlug(slug: string): Promise<IProduct | null> {
@@ -29,6 +35,7 @@ export class ProductService extends BaseEntityService<Product, IProduct, IProduc
       currency: data.currency ?? 'USD',
       description: data.description,
       categories: data.categories,
+      manufacturer: data.manufacturer,
       createdAt: now,
       updatedAt: now,
     });

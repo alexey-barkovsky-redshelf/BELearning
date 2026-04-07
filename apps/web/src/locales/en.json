@@ -12,9 +12,38 @@
     "clearAll": "Clear all",
     "remove": "Remove"
   },
+  "pagination": {
+    "label": "Pagination"
+  },
+  "filterBar": {
+    "search": "Search",
+    "searchSubmit": "Search",
+    "category": "Category",
+    "selectAll": "Select all",
+    "priceRange": "Price",
+    "minPrice": "Min price",
+    "maxPrice": "Max price",
+    "minPriceShort": "Min",
+    "maxPriceShort": "Max",
+    "sortBy": "Sort",
+    "sortName": "Name",
+    "sortPrice": "Price",
+    "sortCreatedAt": "Date added",
+    "order": "Order",
+    "orderAsc": "Ascending",
+    "orderDesc": "Descending",
+    "applyPrice": "Apply price",
+    "resetAll": "Reset all",
+    "toolbar": "Product filters",
+    "ariaOpenSearch": "Open search",
+    "ariaOpenCategories": "Open categories",
+    "ariaOpenSort": "Open sort",
+    "ariaOpenPrice": "Open price range"
+  },
   "dashboard": {
     "title": "Home",
     "searchPlaceholder": "Search products…",
+    "searchSubmit": "Search",
     "tiles": {
       "allDesc": "All products",
       "healthDesc": "Wellness and self-care",
@@ -88,7 +117,12 @@
     "buy": "Buy",
     "manufacturer": "Manufacturer",
     "addToFavorites": "Add to favorites",
-    "removeFromFavorites": "Remove from favorites"
+    "removeFromFavorites": "Remove from favorites",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "pageInfo": "Page {{page}} of {{totalPages}} · {{total}} products",
+    "perPage": "Per page",
+    "empty": "No products match your filters."
   },
   "productDetail": {
     "notFound": "Product not found",

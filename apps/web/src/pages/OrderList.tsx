@@ -12,11 +12,12 @@ export function OrderList() {
   const [payingId, setPayingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  const { data: orders = [], loading, error, refetch } = useAsync<Order[]>(
+  const { data: ordersData, loading, error, refetch } = useAsync<Order[]>(
     () => api.getOrdersByUser(userId),
     [userId],
     { enabled: !!userId.trim(), onError: (e) => (e instanceof Error ? e.message : t('errors.loadFailed')) }
   );
+  const orders = ordersData ?? [];
 
   const handleMarkPaid = (orderId: string) => {
     setActionError(null);
