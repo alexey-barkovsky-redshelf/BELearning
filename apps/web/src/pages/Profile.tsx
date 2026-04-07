@@ -74,11 +74,12 @@ export function Profile() {
   const [searchParams] = useSearchParams();
   const thanks = searchParams.get('thanks');
   const { userId, isLoggedIn } = useUser();
-  const { data: orders = [], loading: loadingOrders, error: errorOrders } = useAsync<Order[]>(
+  const { data: ordersData, loading: loadingOrders, error: errorOrders } = useAsync<Order[]>(
     () => api.getOrdersByUser(userId),
     [userId, isLoggedIn],
     { enabled: isLoggedIn, onError: () => t('errors.loadFailed') }
   );
+  const orders = ordersData ?? [];
 
   if (!isLoggedIn) {
     return (

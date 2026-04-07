@@ -7,6 +7,9 @@
     "apps/*",
     "packages/*"
   ],
+  "prisma": {
+    "schema": "apps/api/prisma/schema.prisma"
+  },
   "scripts": {
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run clean",
@@ -17,7 +20,13 @@
     "build:utils": "yarn workspace @belearning/utils build",
     "test:api": "yarn build:shared && yarn workspace @belearning/api test",
     "dev:api": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/api dev",
-    "dev:web": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/web dev"
+    "dev:web": "yarn workspace @belearning/shared build && yarn workspace @belearning/utils build && yarn workspace @belearning/web dev",
+    "db:status": "yarn workspace @belearning/api run db:status",
+    "db:generate": "yarn workspace @belearning/api run db:generate",
+    "db:migrate": "yarn workspace @belearning/api run db:migrate:deploy",
+    "db:migrate:dev": "yarn workspace @belearning/api run db:migrate",
+    "db:studio": "yarn workspace @belearning/api run db:studio",
+    "db:seed": "yarn workspace @belearning/api run db:seed"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

@@ -53,20 +53,14 @@ describe('runProductListPipeline', () => {
     expect(out.map((x) => x.id).sort()).toEqual(['1', '3']);
   });
 
-  it('filters by min and max price in full mode', () => {
+  it('filters by min and max price', () => {
     const q = baseQuery({ minPrice: 15, maxPrice: 25 });
-    const { items: out, total } = runProductListPipeline(items, q, 'full');
+    const { items: out, total } = runProductListPipeline(items, q);
     expect(total).toBe(1);
     expect(out[0].id).toBe('3');
   });
 
-  it('does not apply price filter in dbPrefiltered mode', () => {
-    const q = baseQuery({ minPrice: 15, maxPrice: 25 });
-    const { total } = runProductListPipeline(items, q, 'dbPrefiltered');
-    expect(total).toBe(3);
-  });
-
-  it('filters by search on name and manufacturer in full mode', () => {
+  it('filters by search on name and manufacturer', () => {
     const withMfr = [
       ...items,
       p({
@@ -79,7 +73,7 @@ describe('runProductListPipeline', () => {
       }),
     ];
     const q = baseQuery({ search: 'vitamin' });
-    const { items: out, total } = runProductListPipeline(withMfr, q, 'full');
+    const { items: out, total } = runProductListPipeline(withMfr, q);
     expect(total).toBe(1);
     expect(out[0].id).toBe('4');
   });
@@ -97,10 +91,16 @@ describe('runProductListPipeline', () => {
   });
 
   it('paginates', () => {
-    const fixed = baseQuery({ page: 2, pageSize: 2 });
-    const { items: out, total } = runProductListPipeline(items, fixed);
-    expect(total).toBe(3);
+    const many = [
+      ...items,
+      p({ id: '4', name: 'Delta', slug: 'delta', price: 40, createdAt: TS_JAN1 }),
+      p({ id: '5', name: 'Epsilon', slug: 'epsilon', price: 50, createdAt: TS_JAN1 }),
+      p({ id: '6', name: 'Zeta', slug: 'zeta', price: 60, createdAt: TS_JAN1 }),
+    ];
+    const fixed = baseQuery({ page: 2, pageSize: 5 });
+    const { items: out, total } = runProductListPipeline(many, fixed);
+    expect(total).toBe(6);
     expect(out).toHaveLength(1);
-    expect(out[0].id).toBe('3');
+    expect(out[0].id).toBe('6');
   });
 });

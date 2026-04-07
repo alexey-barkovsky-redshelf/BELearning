@@ -1,4 +1,4 @@
-import type { FormEvent, RefObject } from 'react';
+import type { FormEvent, Ref } from 'react';
 import type { ListProductsQuery, ProductCategoryCode } from '@belearning/shared';
 import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
 import { useTranslation } from '../../context/LocaleContext';
@@ -7,7 +7,7 @@ import { SearchIcon } from '../icons/FilterIcons';
 export type SearchFilterPanelProps = {
   searchDraft: string;
   onSearchDraftChange: (value: string) => void;
-  searchInputRef: RefObject<HTMLInputElement | null>;
+  searchInputRef: Ref<HTMLInputElement>;
   onCommit: () => void;
 };
 
@@ -53,7 +53,7 @@ export function SearchFilterPanel({
 }
 
 export type CategoryFilterPanelProps = {
-  selectAllRef: RefObject<HTMLInputElement | null>;
+  selectAllRef: Ref<HTMLInputElement>;
   allCategoriesSelected: boolean;
   selectedSet: Set<ProductCategoryCode>;
   onToggleSelectAll: () => void;

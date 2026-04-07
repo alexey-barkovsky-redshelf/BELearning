@@ -35,6 +35,7 @@ export class ProductService extends BaseEntityService<Product, IProduct, IProduc
       currency: data.currency ?? 'USD',
       description: data.description,
       categories: data.categories,
+      manufacturer: data.manufacturer,
       createdAt: now,
       updatedAt: now,
     });

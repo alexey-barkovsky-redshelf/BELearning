@@ -1,8 +1,6 @@
 import type { ListProductsQuery } from '@belearning/shared';
 import { Product } from '../Models/index.js';
 
-export type ProductListPipelineMode = 'full' | 'dbPrefiltered';
-
 function matchesSearch(p: Product, qLower: string): boolean {
   if (p.name.toLowerCase().includes(qLower)) {
     return true;
@@ -14,27 +12,25 @@ function matchesSearch(p: Product, qLower: string): boolean {
 export function runProductListPipeline(
   products: Product[],
   query: ListProductsQuery,
-  mode: ProductListPipelineMode = 'full',
 ): { items: Product[]; total: number } {
   let rows = products;
 
-  if (mode === 'full') {
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
-      rows = rows.filter((p) => {
-        const price = p.price;
-        if (query.minPrice !== undefined && price < query.minPrice) {
-          return false;
-        }
-        if (query.maxPrice !== undefined && price > query.maxPrice) {
-          return false;
-        }
-        return true;
-      });
-    }
-    if (query.search !== undefined) {
-      const q = query.search.toLowerCase();
-      rows = rows.filter((p) => matchesSearch(p, q));
-    }
+  if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+    rows = rows.filter((p) => {
+      const price = p.price;
+      if (query.minPrice !== undefined && price < query.minPrice) {
+        return false;
+      }
+      if (query.maxPrice !== undefined && price > query.maxPrice) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  if (query.search !== undefined) {
+    const q = query.search.toLowerCase();
+    rows = rows.filter((p) => matchesSearch(p, q));
   }
 
   if (query.category !== undefined && query.category.length > 0) {

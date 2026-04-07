@@ -10,7 +10,7 @@ export function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: categories = [], loading, error } = useAsync<Category[]>(
+  const { data: categoriesData, loading, error } = useAsync<Category[]>(
     () => api.getCategories(),
     [],
     {
@@ -19,6 +19,7 @@ export function Dashboard() {
       },
     }
   );
+  const categories = categoriesData ?? [];
 
   const onSearchSubmit = (e: FormEvent) => {
     e.preventDefault();

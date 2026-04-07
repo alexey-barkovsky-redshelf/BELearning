@@ -34,7 +34,9 @@ function loadFavorites(userId: string): string[] {
 function saveFavorites(userId: string, ids: string[]): void {
   try {
     localStorage.setItem(storageKey(userId), JSON.stringify(ids));
-  } catch {}
+  } catch {
+    void 0;
+  }
 }
 
 type FavoritesContextValue = {

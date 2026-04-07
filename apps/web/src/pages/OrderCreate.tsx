@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { api, type Product, type OrderItem } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';

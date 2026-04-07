@@ -21,7 +21,9 @@ function getStoredLang(): Lang {
     if (s === 'en' || s === 'ru') {
       return s;
     }
-  } catch {}
+  } catch {
+    void 0;
+  }
   return 'en';
 }
 
@@ -56,7 +58,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     setLangState(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);
-    } catch {}
+    } catch {
+      void 0;
+    }
   }, []);
 
   const t = useCallback<TFunction>(

@@ -35,7 +35,9 @@ function loadCart(): OrderItem[] {
 function saveCart(items: OrderItem[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  } catch {}
+  } catch {
+    void 0;
+  }
 }
 
 type CartContextValue = {
