@@ -1,5 +1,7 @@
 import { PRODUCT_CATEGORY, PRODUCT_CATEGORY_CODES } from '@belearning/utils';
+import type { PrismaClient } from '@prisma/client';
 import type { ProductCategoryCode } from '@belearning/shared';
+import bcrypt from 'bcryptjs';
 import { Product } from '../modules/product/Models/index.js';
 import type { IProductRepository } from '../modules/product/Types/index.js';
 
@@ -184,4 +186,31 @@ export async function seedMockData(productRepository: IProductRepository): Promi
 
   console.info(`[seed] mock products: inserted ${inserted} (chunk size ${chunk})`);
   return { inserted };
+}
+
+export async function seedDemoUsers(prisma: PrismaClient): Promise<void> {
+  const now = new Date().toISOString();
+  const users: { loginId: string; password: string; role: string }[] = [
+    { loginId: 'demo', password: 'demo', role: 'user' },
+    { loginId: 'admin', password: 'admin', role: 'admin' },
+  ];
+  for (const u of users) {
+    const passwordHash = await bcrypt.hash(u.password, 10);
+    await prisma.user.upsert({
+      where: { loginId: u.loginId },
+      create: {
+        loginId: u.loginId,
+        passwordHash,
+        role: u.role,
+        createdAt: now,
+        updatedAt: now,
+      },
+      update: {
+        passwordHash,
+        role: u.role,
+        updatedAt: now,
+      },
+    });
+  }
+  console.info('[seed] demo users: demo/demo (user), admin/admin (admin)');
 }

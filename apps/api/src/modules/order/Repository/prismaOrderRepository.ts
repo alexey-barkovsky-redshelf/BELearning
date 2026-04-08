@@ -31,6 +31,14 @@ export class PrismaOrderRepository implements IOrderRepository {
     return rows.map((row) => Order.fromPlain(this.toPlain(row)));
   }
 
+  public async findAll(): Promise<Order[]> {
+    const rows = await this.prisma.order.findMany({
+      include: { items: { select: { productId: true, productTitle: true, priceAtPurchase: true, quantity: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map((row) => Order.fromPlain(this.toPlain(row)));
+  }
+
   private toPlain(row: OrderRowWithItems): Parameters<typeof Order.fromPlain>[0] {
     const items = row.items.map(({ productId, productTitle, priceAtPurchase, quantity }) => ({
       productId,

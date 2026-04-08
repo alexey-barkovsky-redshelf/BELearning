@@ -27,7 +27,6 @@ const validOrderItem = {
 };
 
 const validCreateOrderBody = {
-  userId: 'user-1',
   items: [validOrderItem],
 };
 
@@ -86,38 +85,10 @@ describe('validateBody', () => {
     expect(res.status).toHaveBeenCalledWith(400);
   });
 
-  it('rejects empty userId string', () => {
-    const middleware = validateBody(createOrderBodySchema);
-    const req = {
-      body: { ...validCreateOrderBody, userId: '' },
-    } as Request;
-    const res = createMockRes();
-    const next = jest.fn() as NextFunction;
-
-    middleware(req, res, next);
-
-    expect(next).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(400);
-  });
-
-  it('rejects whitespace-only userId', () => {
-    const middleware = validateBody(createOrderBodySchema);
-    const req = {
-      body: { ...validCreateOrderBody, userId: '   ' },
-    } as Request;
-    const res = createMockRes();
-    const next = jest.fn() as NextFunction;
-
-    middleware(req, res, next);
-
-    expect(next).not.toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(400);
-  });
-
   it('rejects empty items array', () => {
     const middleware = validateBody(createOrderBodySchema);
     const req = {
-      body: { userId: 'user-1', items: [] },
+      body: { items: [] },
     } as Request;
     const res = createMockRes();
     const next = jest.fn() as NextFunction;
@@ -132,7 +103,6 @@ describe('validateBody', () => {
     const middleware = validateBody(createOrderBodySchema);
     const req = {
       body: {
-        userId: 'user-1',
         items: [{ ...validOrderItem, productId: '' }],
       },
     } as Request;
@@ -149,7 +119,6 @@ describe('validateBody', () => {
     const middleware = validateBody(createOrderBodySchema);
     const req = {
       body: {
-        userId: 'user-1',
         items: [{ ...validOrderItem, priceAtPurchase: '9.99' }],
       },
     } as unknown as Request;
@@ -166,7 +135,6 @@ describe('validateBody', () => {
     const middleware = validateBody(createOrderBodySchema);
     const req = {
       body: {
-        userId: 'user-1',
         items: [{ ...validOrderItem, quantity: 0 }],
       },
     } as Request;

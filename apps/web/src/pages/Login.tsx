@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { api } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
 import { useUser } from '../context/UserContext';
 
@@ -8,32 +9,56 @@ export function Login() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const returnTo = searchParams.get('return') ?? '/profile';
-  const { setUserId } = useUser();
+  const { setSession } = useUser();
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [userIdValue, setUserIdValue] = useState('');
+  const [loginIdValue, setLoginIdValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [remoteError, setRemoteError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const resetValidation = () => {
     setSubmitAttempted(false);
     setTouched(false);
+    setRemoteError(null);
   };
 
-  const trimmed = userIdValue.trim();
-  const errorRequired = trimmed.length === 0;
-  const showError = (touched || submitAttempted) && errorRequired;
-  const errorMessage = errorRequired ? t('login.errorRequired') : '';
+  const trimmedLogin = loginIdValue.trim();
+  const errorLoginRequired = trimmedLogin.length === 0;
+  const errorPasswordRequired = passwordValue.length === 0;
+  const showLoginError = (touched || submitAttempted) && errorLoginRequired;
+  const showPasswordError = (touched || submitAttempted) && errorPasswordRequired;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitAttempted(true);
     setTouched(true);
-    if (errorRequired) {
+    setRemoteError(null);
+    if (errorLoginRequired || errorPasswordRequired) {
       return;
     }
-    setUserId(trimmed);
-    navigate(returnTo);
+    setSubmitting(true);
+    const body = { loginId: trimmedLogin, password: passwordValue };
+    const call = mode === 'signin' ? api.login(body) : api.register(body);
+    call
+      .then((res) => {
+        setSession({
+          token: res.token,
+          userId: res.user.id,
+          loginId: res.user.loginId,
+          role: res.user.role,
+        });
+        navigate(returnTo);
+      })
+      .catch((err) => {
+        const msg = err instanceof Error ? err.message : t('login.errorGeneric');
+        setRemoteError(msg);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
   };
 
   return (
@@ -65,36 +90,69 @@ export function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
-          {mode === 'signup' ? (
-            <p className="login-hint">{t('login.signUpHint')}</p>
-          ) : null}
+          {mode === 'signup' ? <p className="login-hint">{t('login.signUpHint')}</p> : null}
+          <p className="login-hint login-demo-hint">{t('login.demoHint')}</p>
           <div className="form-field">
-            <label htmlFor="login-user-id">{t('login.userIdLabel')}</label>
+            <label htmlFor="login-id">{t('login.loginIdLabel')}</label>
             <input
-              id="login-user-id"
+              id="login-id"
               type="text"
-              value={userIdValue}
+              value={loginIdValue}
               onChange={(e) => {
-                setUserIdValue(e.target.value);
+                setLoginIdValue(e.target.value);
                 setTouched(true);
               }}
               onBlur={() => {
                 setTouched(true);
               }}
-              placeholder={t('login.userIdPlaceholder')}
+              placeholder={t('login.loginIdPlaceholder')}
               autoComplete="username"
-              className={showError ? 'input-error' : ''}
-              aria-invalid={showError}
-              aria-describedby={showError ? 'login-user-id-error' : undefined}
+              className={showLoginError ? 'input-error' : ''}
+              aria-invalid={showLoginError}
+              aria-describedby={showLoginError ? 'login-id-error' : undefined}
             />
-            {showError ? (
-              <p id="login-user-id-error" className="form-field-error" role="alert">
-                {errorMessage}
+            {showLoginError ? (
+              <p id="login-id-error" className="form-field-error" role="alert">
+                {t('login.errorLoginRequired')}
               </p>
             ) : null}
           </div>
-          <button type="submit" className="button">
-            {mode === 'signin' ? t('login.submit') : t('login.submitSignUp')}
+          <div className="form-field">
+            <label htmlFor="login-password">{t('login.passwordLabel')}</label>
+            <input
+              id="login-password"
+              type="password"
+              value={passwordValue}
+              onChange={(e) => {
+                setPasswordValue(e.target.value);
+                setTouched(true);
+              }}
+              onBlur={() => {
+                setTouched(true);
+              }}
+              placeholder={t('login.passwordPlaceholder')}
+              autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+              className={showPasswordError ? 'input-error' : ''}
+              aria-invalid={showPasswordError}
+              aria-describedby={showPasswordError ? 'login-password-error' : undefined}
+            />
+            {showPasswordError ? (
+              <p id="login-password-error" className="form-field-error" role="alert">
+                {t('login.errorPasswordRequired')}
+              </p>
+            ) : null}
+          </div>
+          {remoteError ? (
+            <p className="form-field-error" role="alert">
+              {remoteError}
+            </p>
+          ) : null}
+          <button type="submit" className="button" disabled={submitting}>
+            {submitting
+              ? t('login.submitting')
+              : mode === 'signin'
+                ? t('login.submit')
+                : t('login.submitSignUp')}
           </button>
         </form>
 

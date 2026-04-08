@@ -6,4 +6,8 @@ export class InMemoryOrderRepository extends BaseInMemoryRepository<Order> imple
   public async findByUserId(userId: string): Promise<Order[]> {
     return Array.from(this.store.values()).filter((o) => o.userId === userId);
   }
+
+  public async findAll(): Promise<Order[]> {
+    return Array.from(this.store.values());
+  }
 }

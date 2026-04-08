@@ -73,10 +73,10 @@ export function Profile() {
   const { currency, setCurrency } = useCurrency();
   const [searchParams] = useSearchParams();
   const thanks = searchParams.get('thanks');
-  const { userId, isLoggedIn } = useUser();
+  const { isLoggedIn } = useUser();
   const { data: ordersData, loading: loadingOrders, error: errorOrders } = useAsync<Order[]>(
-    () => api.getOrdersByUser(userId),
-    [userId, isLoggedIn],
+    () => api.getMyOrders(),
+    [isLoggedIn],
     { enabled: isLoggedIn, onError: () => t('errors.loadFailed') }
   );
   const orders = ordersData ?? [];

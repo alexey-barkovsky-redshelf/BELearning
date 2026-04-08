@@ -1,4 +1,4 @@
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import { APP_NAME } from '@belearning/utils';
 import { MAIN_ELEMENT_ID } from '../constants/layoutIds';
 import { useTranslation } from '../context/LocaleContext';
@@ -8,9 +8,11 @@ import { useUser } from '../context/UserContext';
 
 export function Layout() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { totalCount } = useCart();
   const { favoriteIds } = useFavorites();
-  const { userId } = useUser();
+  const { loginId, isLoggedIn, isAdmin, setSession } = useUser();
+  const avatarLetter = loginId.length > 0 ? loginId.slice(0, 1).toUpperCase() : '?';
   return (
     <div className="layout">
       <header className="header">
@@ -35,9 +37,33 @@ export function Layout() {
             {t('nav.cart')}
             {totalCount > 0 ? <span className="cart-badge">{totalCount}</span> : null}
           </NavLink>
+          {isAdmin ? (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              {t('nav.admin')}
+            </NavLink>
+          ) : null}
           <Link to="/profile" className="nav-link nav-user-circle" title={t('nav.profile')}>
-            <span className="nav-user-avatar">{userId ? userId.slice(0, 1).toUpperCase() : '?'}</span>
+            <span className="nav-user-avatar">{avatarLetter}</span>
           </Link>
+          {isLoggedIn ? (
+            <button
+              type="button"
+              className="nav-link nav-logout"
+              onClick={() => {
+                setSession(null);
+                navigate('/');
+              }}
+            >
+              {t('nav.logout')}
+            </button>
+          ) : (
+            <NavLink to="/login" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              {t('nav.login')}
+            </NavLink>
+          )}
           <span className="lang-switcher">
             <button type="button" className={i18n.language === 'ru' ? 'active' : ''} onClick={() => i18n.changeLanguage('ru')}>RU</button>
             <span className="lang-sep">|</span>

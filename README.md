@@ -36,6 +36,15 @@ yarn workspace @belearning/shared build
 yarn workspace @belearning/utils build
 ```
 
+## Admin account (seeded)
+
+Created by `yarn workspace @belearning/api db:seed` (and on API startup when seeding is enabled).
+
+| Login   | Password | Role   |
+|---------|----------|--------|
+| `admin` | `admin`  | admin  |
+| `demo`  | `demo`   | user   |
+
 ## Scripts
 
 | Command | Description |
@@ -47,4 +56,4 @@ yarn workspace @belearning/utils build
 
 Web proxies `/api` to the API (`apps/web/vite.config.ts`).
 
-**Web UI** — Products list and detail, create order (with User ID + cart), list orders and mark paid. Run `yarn dev:web` and open http://localhost:5173. Use any User ID (e.g. `user-1`) for Orders.
+**Web UI** — Products, cart, checkout (JWT auth), orders, admin panel for the `admin` user. Run `yarn dev:web` and open http://localhost:5173.
