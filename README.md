@@ -53,6 +53,7 @@ Created by `yarn workspace @belearning/api db:seed` (and on API startup when see
 | `yarn dev:web` | Web (http://localhost:5173) |
 | `yarn build` | Build all |
 | `yarn lint` | Lint |
+| `yarn test:api` | API Jest tests (includes JWT secret, `requireAuth` / `requireRole`, `AuthService`) |
 
 Web proxies `/api` to the API (`apps/web/vite.config.ts`).
 
