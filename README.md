@@ -40,13 +40,15 @@ yarn db:migrate
 yarn db:seed
 ```
 
-If `yarn db:migrate` cannot apply migrations from an empty database (older migration chain), recreate the SQLite file from the current schema and seed:
+If your local SQLite file was created under an old migration history, reset and reapply:
 
 ```bash
 rm -f apps/api/prisma/dev.db
-yarn db:push
+yarn db:migrate
 yarn db:seed
 ```
+
+To sync the schema without using migration files (not recommended for production), use `yarn db:push` instead of `yarn db:migrate`.
 
 ## Run locally
 
