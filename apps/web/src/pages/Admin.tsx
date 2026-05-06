@@ -99,7 +99,7 @@ export function Admin() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>{t('admin.colLogin')}</th>
+                  <th>{t('admin.colEmail')}</th>
                   <th>{t('admin.colRole')}</th>
                   <th>{t('admin.colId')}</th>
                   <th>{t('admin.colCreated')}</th>
@@ -108,7 +108,7 @@ export function Admin() {
               <tbody>
                 {userRows.map((u) => (
                   <tr key={u.id}>
-                    <td>{u.loginId}</td>
+                    <td className="mono">{u.email}</td>
                     <td>{u.role}</td>
                     <td className="mono">{u.id.slice(0, 8)}…</td>
                     <td className="mono">{u.createdAt.slice(0, 10)}</td>

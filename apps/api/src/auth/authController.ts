@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
 import type { Request, Response } from 'express';
 import type { LoginBody, RegisterBody } from '@belearning/shared';
+import { isPrismaUniqueConstraintViolation } from '../infrastructure/prismaErrors.js';
 import { AuthService } from './authService.js';
 
 export class AuthController {
@@ -12,7 +12,7 @@ export class AuthController {
       const result = await this.authService.register(body);
       res.status(201).json(result);
     } catch (e: unknown) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+      if (isPrismaUniqueConstraintViolation(e)) {
         res.status(409).json({ error: 'Login already taken' });
         return;
       }

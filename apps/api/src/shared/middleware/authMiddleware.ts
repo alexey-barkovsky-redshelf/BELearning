@@ -1,10 +1,10 @@
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { getJwtSecret } from '../../auth/jwtSecret.js';
+import { jwtAuthConfig } from '../../auth/jwtConfig.js';
 
 export type AuthContext = {
   userId: string;
-  loginId: string;
+  email: string;
   role: string;
 };
 
@@ -24,15 +24,15 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
     return;
   }
   try {
-    const payload = jwt.verify(token, getJwtSecret()) as jwt.JwtPayload;
+    const payload = jwt.verify(token, jwtAuthConfig.secret) as jwt.JwtPayload;
     const sub = typeof payload.sub === 'string' ? payload.sub : '';
-    const loginId = typeof payload.loginId === 'string' ? payload.loginId : '';
+    const email = typeof payload.email === 'string' ? payload.email : '';
     const role = typeof payload.role === 'string' ? payload.role : 'user';
     if (!sub) {
       res.status(401).json({ error: 'Invalid token' });
       return;
     }
-    req.auth = { userId: sub, loginId, role };
+    req.auth = { userId: sub, email, role };
     next();
   } catch {
     res.status(401).json({ error: 'Invalid token' });
@@ -51,4 +51,10 @@ export function requireRole(...allowed: string[]) {
     }
     next();
   };
+}
+
+export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
+  requireAuth(req, res, () => {
+    requireRole('admin')(req, res, next);
+  });
 }

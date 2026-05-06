@@ -12,11 +12,11 @@ export class AdminController {
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
-        loginId: true,
+        email: true,
         role: true,
         createdAt: true,
       },
-      orderBy: { loginId: 'asc' },
+      orderBy: { email: 'asc' },
     });
     res.json(users);
   }

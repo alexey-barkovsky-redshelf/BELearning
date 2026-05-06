@@ -4,20 +4,26 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import type { OrderItem } from '../api/client';
 import { useCurrency } from './CurrencyContext';
 
-const STORAGE_KEY = 'belearning-cart';
+const STORAGE_PREFIX = 'belearning-cart';
+const LEGACY_STORAGE_KEY = 'belearning-cart';
 
-function loadCart(): OrderItem[] {
+function storageKey(userId: string): string {
+  return `${STORAGE_PREFIX}-${userId.length > 0 ? userId : 'guest'}`;
+}
+
+function parseCart(raw: string): OrderItem[] {
   try {
-    const s = localStorage.getItem(STORAGE_KEY);
-    if (!s) return [];
-    const parsed = JSON.parse(s) as unknown;
-    if (!Array.isArray(parsed)) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
     return parsed.filter(
       (x): x is OrderItem =>
         x != null &&
@@ -25,19 +31,53 @@ function loadCart(): OrderItem[] {
         typeof (x as OrderItem).productId === 'string' &&
         typeof (x as OrderItem).productTitle === 'string' &&
         typeof (x as OrderItem).priceAtPurchase === 'number' &&
-        typeof (x as OrderItem).quantity === 'number'
+        typeof (x as OrderItem).quantity === 'number',
     );
   } catch {
     return [];
   }
 }
 
-function saveCart(items: OrderItem[]) {
+function loadCart(userId: string): OrderItem[] {
+  const key = storageKey(userId);
+  let s = localStorage.getItem(key);
+  if (!s && key.endsWith('-guest')) {
+    s = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (s) {
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+    }
+  }
+  if (!s) {
+    return [];
+  }
+  return parseCart(s);
+}
+
+function saveCart(userId: string, items: OrderItem[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(storageKey(userId), JSON.stringify(items));
   } catch {
     void 0;
   }
+}
+
+function mergeOrderItems(into: OrderItem[], from: OrderItem[]): OrderItem[] {
+  const map = new Map<string, OrderItem>();
+  for (const item of into) {
+    map.set(item.productId, { ...item });
+  }
+  for (const item of from) {
+    const existing = map.get(item.productId);
+    if (existing) {
+      map.set(item.productId, {
+        ...existing,
+        quantity: existing.quantity + item.quantity,
+      });
+    } else {
+      map.set(item.productId, { ...item });
+    }
+  }
+  return Array.from(map.values());
 }
 
 type CartContextValue = {
@@ -52,13 +92,40 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-export function CartProvider({ children }: { children: ReactNode }) {
+type CartProviderProps = {
+  children: ReactNode;
+  userId: string;
+};
+
+export function CartProvider({ children, userId }: CartProviderProps) {
   const { currency } = useCurrency();
-  const [items, setItems] = useState<OrderItem[]>(loadCart);
+  const [items, setItems] = useState<OrderItem[]>(() => loadCart(userId));
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
-    saveCart(items);
-  }, [items]);
+    if (userId.length > 0) {
+      const savedForUser = loadCart(userId);
+      const guestItems = loadCart('');
+      if (guestItems.length > 0) {
+        const merged = mergeOrderItems(savedForUser, guestItems);
+        saveCart('', []);
+        setItems(merged);
+      } else {
+        setItems(savedForUser);
+      }
+    } else {
+      setItems(loadCart(userId));
+    }
+    isInitialLoad.current = true;
+  }, [userId]);
+
+  useEffect(() => {
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+    saveCart(userId, items);
+  }, [userId, items]);
 
   const addItem = useCallback((item: Omit<OrderItem, 'quantity'> & { quantity?: number }) => {
     const qty = item.quantity ?? 1;
@@ -66,7 +133,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const existing = prev.find((x) => x.productId === item.productId);
       if (existing) {
         return prev.map((x) =>
-          x.productId === item.productId ? { ...x, quantity: x.quantity + qty } : x
+          x.productId === item.productId ? { ...x, quantity: x.quantity + qty } : x,
         );
       }
       return [...prev, { ...item, quantity: qty }];
@@ -82,12 +149,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setItems((prev) => prev.filter((x) => x.productId !== productId));
       return;
     }
-    setItems((prev) =>
-      prev.map((x) => (x.productId === productId ? { ...x, quantity } : x))
-    );
+    setItems((prev) => prev.map((x) => (x.productId === productId ? { ...x, quantity } : x)));
   }, []);
 
-  const clear = useCallback(() => setItems([]), []);
+  const clear = useCallback(() => {
+    setItems([]);
+  }, []);
 
   const totalCount = useMemo(() => items.reduce((n, i) => n + i.quantity, 0), [items]);
 
@@ -98,7 +165,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({ items, addItem, removeItem, setQuantity, clear, totalCount, totalSum }),
-    [items, addItem, removeItem, setQuantity, clear, totalCount, totalSum]
+    [items, addItem, removeItem, setQuantity, clear, totalCount, totalSum],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -106,6 +173,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error('useCart must be used within CartProvider');
+  if (!ctx) {
+    throw new Error('useCart must be used within CartProvider');
+  }
   return ctx;
 }

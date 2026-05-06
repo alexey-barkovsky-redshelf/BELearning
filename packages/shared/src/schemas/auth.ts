@@ -1,13 +1,15 @@
 import { z } from 'zod';
 import { nonEmptyString } from './common';
 
+const emailCredential = z.string().trim().email().transform((s) => s.toLowerCase());
+
 export const loginBodySchema = z.object({
-  loginId: nonEmptyString,
+  email: emailCredential,
   password: nonEmptyString,
 });
 
 export const registerBodySchema = z.object({
-  loginId: nonEmptyString,
+  email: emailCredential,
   password: nonEmptyString,
 });
 

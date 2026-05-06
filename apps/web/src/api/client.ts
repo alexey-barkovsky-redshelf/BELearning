@@ -21,7 +21,7 @@ export interface ApiErrorPayload {
 
 export type AuthUser = {
   id: string;
-  loginId: string;
+  email: string;
   role: string;
 };
 
@@ -32,7 +32,7 @@ export type AuthResponse = {
 
 export type AdminUserRow = {
   id: string;
-  loginId: string;
+  email: string;
   role: string;
   createdAt: string;
 };
@@ -107,9 +107,9 @@ export const api = {
   getProduct: (id: string) => request<Product>(`/products/${id}`),
   getProductBySlug: (slug: string) => request<Product>(`/products/slug/${slug}`),
 
-  login: (body: { loginId: string; password: string }) =>
+  login: (body: { email: string; password: string }) =>
     request<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
-  register: (body: { loginId: string; password: string }) =>
+  register: (body: { email: string; password: string }) =>
     request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
 
   createOrder: (body: { items: OrderItem[]; currency?: string }) =>

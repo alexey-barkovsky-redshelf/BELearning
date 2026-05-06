@@ -1,47 +1,25 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { setAuthTokenGetter } from '../api/authHeader';
+import { parseStoredUserSessionJson, type StoredUserSession } from '@belearning/shared';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { SESSION_STORAGE_KEY } from '../constants/sessionStorage';
 
-const STORAGE_KEY = 'belearning-session';
+export type UserSession = StoredUserSession;
 
-export type UserSession = {
-  token: string;
-  userId: string;
-  loginId: string;
-  role: string;
-};
-
-function parseSession(raw: string): UserSession | null {
-  try {
-    const p = JSON.parse(raw) as Record<string, unknown>;
-    const token = typeof p.token === 'string' ? p.token : '';
-    const userId = typeof p.userId === 'string' ? p.userId : '';
-    const loginId = typeof p.loginId === 'string' ? p.loginId : '';
-    const role = typeof p.role === 'string' ? p.role : '';
-    if (token.length === 0 || userId.length === 0 || loginId.length === 0) {
-      return null;
-    }
-    return { token, userId, loginId, role: role.length > 0 ? role : 'user' };
-  } catch {
-    return null;
-  }
-}
-
-function loadSession(): UserSession | null {
+function readStoredUserSession(): UserSession | null {
   if (typeof localStorage === 'undefined') {
     return null;
   }
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw === null || raw.length === 0) {
+  const json = localStorage.getItem(SESSION_STORAGE_KEY);
+  if (json === null || json.length === 0) {
     return null;
   }
-  return parseSession(raw);
+  return parseStoredUserSessionJson(json);
 }
 
 type UserContextValue = {
   session: UserSession | null;
   setSession: (s: UserSession | null) => void;
   userId: string;
-  loginId: string;
+  email: string;
   role: string;
   isLoggedIn: boolean;
   isAdmin: boolean;
@@ -50,32 +28,28 @@ type UserContextValue = {
 const UserContext = createContext<UserContextValue | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [session, setSessionState] = useState<UserSession | null>(() => loadSession());
+  const [session, setSessionState] = useState<UserSession | null>(() => readStoredUserSession());
 
   const setSession = (s: UserSession | null) => {
     setSessionState(s);
     if (typeof localStorage !== 'undefined') {
       if (s === null) {
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(SESSION_STORAGE_KEY);
       } else {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(s));
       }
     }
   };
 
-  useEffect(() => {
-    setAuthTokenGetter(() => session?.token ?? null);
-  }, [session]);
-
   const value = useMemo((): UserContextValue => {
     const userId = session?.userId ?? '';
-    const loginId = session?.loginId ?? '';
+    const email = session?.email ?? '';
     const role = session?.role ?? '';
     return {
       session,
       setSession,
       userId,
-      loginId,
+      email,
       role,
       isLoggedIn: session !== null,
       isAdmin: role === 'admin',

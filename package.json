@@ -25,6 +25,7 @@
     "db:generate": "yarn workspace @belearning/api run db:generate",
     "db:migrate": "yarn workspace @belearning/api run db:migrate:deploy",
     "db:migrate:dev": "yarn workspace @belearning/api run db:migrate",
+    "db:push": "yarn workspace @belearning/api run db:push",
     "db:studio": "yarn workspace @belearning/api run db:studio",
     "db:seed": "yarn workspace @belearning/api run db:seed"
   },

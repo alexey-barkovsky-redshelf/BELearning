@@ -11,8 +11,8 @@ export function Layout() {
   const navigate = useNavigate();
   const { totalCount } = useCart();
   const { favoriteIds } = useFavorites();
-  const { loginId, isLoggedIn, isAdmin, setSession } = useUser();
-  const avatarLetter = loginId.length > 0 ? loginId.slice(0, 1).toUpperCase() : '?';
+  const { email, isLoggedIn, isAdmin, setSession } = useUser();
+  const avatarLetter = email.length > 0 ? email.slice(0, 1).toUpperCase() : '?';
   return (
     <div className="layout">
       <header className="header">

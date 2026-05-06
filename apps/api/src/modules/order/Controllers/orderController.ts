@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import type { CreateOrderBody } from '@belearning/shared';
 import { BaseController } from '../../../shared/controllers/index.js';
+import type { AuthContext } from '../../../shared/middleware/authMiddleware.js';
 import { OrderService } from '../Services/index.js';
 
 export class OrderController extends BaseController {
@@ -8,33 +9,25 @@ export class OrderController extends BaseController {
     super();
   }
 
+  private getAuth(req: Request): AuthContext {
+    return req.auth as AuthContext;
+  }
+
   public async create(req: Request, res: Response): Promise<void> {
-    const auth = req.auth;
-    if (!auth) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
+    const auth = this.getAuth(req);
     const { items, currency } = req.validatedBody as CreateOrderBody;
     const order = await this.orderService.create(auth.userId, items, currency);
     res.status(201).json(order);
   }
 
   public async listMine(req: Request, res: Response): Promise<void> {
-    const auth = req.auth;
-    if (!auth) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
+    const auth = this.getAuth(req);
     const orders = await this.orderService.getByUserId(auth.userId);
     res.json(orders);
   }
 
   public async getById(req: Request, res: Response): Promise<void> {
-    const auth = req.auth;
-    if (!auth) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
+    const auth = this.getAuth(req);
     const id = (req.validatedParams as { id: string }).id;
     const order = await this.orderService.getById(id);
     if (!order) {

@@ -190,27 +190,27 @@ export async function seedMockData(productRepository: IProductRepository): Promi
 
 export async function seedDemoUsers(prisma: PrismaClient): Promise<void> {
   const now = new Date().toISOString();
-  const users: { loginId: string; password: string; role: string }[] = [
-    { loginId: 'demo', password: 'demo', role: 'user' },
-    { loginId: 'admin', password: 'admin', role: 'admin' },
+  const users: { email: string; password: string; role: string }[] = [
+    { email: 'demo@seed.local', password: 'demo', role: 'user' },
+    { email: 'admin@seed.local', password: 'admin', role: 'admin' },
   ];
   for (const u of users) {
-    const passwordHash = await bcrypt.hash(u.password, 10);
+    const password = await bcrypt.hash(u.password, 10);
     await prisma.user.upsert({
-      where: { loginId: u.loginId },
+      where: { email: u.email },
       create: {
-        loginId: u.loginId,
-        passwordHash,
+        email: u.email,
+        password,
         role: u.role,
         createdAt: now,
         updatedAt: now,
       },
       update: {
-        passwordHash,
+        password,
         role: u.role,
         updatedAt: now,
       },
     });
   }
-  console.info('[seed] demo users: demo/demo (user), admin/admin (admin)');
+  console.info('[seed] demo users: demo@seed.local / demo (user), admin@seed.local / admin (admin)');
 }

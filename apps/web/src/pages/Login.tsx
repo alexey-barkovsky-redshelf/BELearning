@@ -12,7 +12,7 @@ export function Login() {
   const { setSession } = useUser();
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [loginIdValue, setLoginIdValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
   const [touched, setTouched] = useState(false);
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -25,10 +25,10 @@ export function Login() {
     setRemoteError(null);
   };
 
-  const trimmedLogin = loginIdValue.trim();
-  const errorLoginRequired = trimmedLogin.length === 0;
+  const trimmedEmail = emailValue.trim();
+  const errorEmailRequired = trimmedEmail.length === 0;
   const errorPasswordRequired = passwordValue.length === 0;
-  const showLoginError = (touched || submitAttempted) && errorLoginRequired;
+  const showEmailError = (touched || submitAttempted) && errorEmailRequired;
   const showPasswordError = (touched || submitAttempted) && errorPasswordRequired;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -36,18 +36,18 @@ export function Login() {
     setSubmitAttempted(true);
     setTouched(true);
     setRemoteError(null);
-    if (errorLoginRequired || errorPasswordRequired) {
+    if (errorEmailRequired || errorPasswordRequired) {
       return;
     }
     setSubmitting(true);
-    const body = { loginId: trimmedLogin, password: passwordValue };
+    const body = { email: trimmedEmail, password: passwordValue };
     const call = mode === 'signin' ? api.login(body) : api.register(body);
     call
       .then((res) => {
         setSession({
           token: res.token,
           userId: res.user.id,
-          loginId: res.user.loginId,
+          email: res.user.email,
           role: res.user.role,
         });
         navigate(returnTo);
@@ -93,27 +93,27 @@ export function Login() {
           {mode === 'signup' ? <p className="login-hint">{t('login.signUpHint')}</p> : null}
           <p className="login-hint login-demo-hint">{t('login.demoHint')}</p>
           <div className="form-field">
-            <label htmlFor="login-id">{t('login.loginIdLabel')}</label>
+            <label htmlFor="login-email">{t('login.emailLabel')}</label>
             <input
-              id="login-id"
-              type="text"
-              value={loginIdValue}
+              id="login-email"
+              type="email"
+              value={emailValue}
               onChange={(e) => {
-                setLoginIdValue(e.target.value);
+                setEmailValue(e.target.value);
                 setTouched(true);
               }}
               onBlur={() => {
                 setTouched(true);
               }}
-              placeholder={t('login.loginIdPlaceholder')}
-              autoComplete="username"
-              className={showLoginError ? 'input-error' : ''}
-              aria-invalid={showLoginError}
-              aria-describedby={showLoginError ? 'login-id-error' : undefined}
+              placeholder={t('login.emailPlaceholder')}
+              autoComplete="email"
+              className={showEmailError ? 'input-error' : ''}
+              aria-invalid={showEmailError}
+              aria-describedby={showEmailError ? 'login-email-error' : undefined}
             />
-            {showLoginError ? (
-              <p id="login-id-error" className="form-field-error" role="alert">
-                {t('login.errorLoginRequired')}
+            {showEmailError ? (
+              <p id="login-email-error" className="form-field-error" role="alert">
+                {t('login.errorEmailRequired')}
               </p>
             ) : null}
           </div>

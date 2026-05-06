@@ -14,13 +14,17 @@ describe('AuthService', () => {
   });
 
   describe('signAccessToken', () => {
-    it('produces a JWT with sub, loginId, and role', () => {
+    it('produces a JWT with sub, email, and role', () => {
       const prisma = { user: { create: jest.fn(), findUnique: jest.fn() } } as unknown as PrismaClient;
       const svc = new AuthService(prisma);
-      const token = svc.signAccessToken({ id: 'uid-1', loginId: 'tester', role: 'admin' });
+      const token = svc.signAccessToken({
+        id: 'uid-1',
+        email: 'tester@example.com',
+        role: 'admin',
+      });
       const decoded = jwt.verify(token, SECRET) as jwt.JwtPayload;
       expect(decoded.sub).toBe('uid-1');
-      expect(decoded.loginId).toBe('tester');
+      expect(decoded.email).toBe('tester@example.com');
       expect(decoded.role).toBe('admin');
     });
   });
@@ -31,9 +35,9 @@ describe('AuthService', () => {
         user: {
           create: jest.fn().mockResolvedValue({
             id: 'new-id',
-            loginId: 'reg-user',
+            email: 'reg@example.com',
             role: 'user',
-            passwordHash: 'hash',
+            password: 'hash',
             createdAt: 't',
             updatedAt: 't',
           }),
@@ -42,23 +46,26 @@ describe('AuthService', () => {
       } as unknown as PrismaClient;
       const svc = new AuthService(prisma);
 
-      const out = await svc.register({ loginId: 'reg-user', password: 'password123' });
+      const out = await svc.register({
+        email: 'reg@example.com',
+        password: 'password123',
+      });
 
       expect(prisma.user.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
-            loginId: 'reg-user',
+            email: 'reg@example.com',
             role: 'user',
           }),
         }),
       );
-      expect(out.user).toEqual({ id: 'new-id', loginId: 'reg-user', role: 'user' });
+      expect(out.user).toEqual({ id: 'new-id', email: 'reg@example.com', role: 'user' });
       const decoded = jwt.verify(out.token, SECRET) as jwt.JwtPayload;
       expect(decoded.sub).toBe('new-id');
       expect(decoded.role).toBe('user');
       const createData = (prisma.user.create as jest.Mock).mock.calls[0][0].data;
-      expect(createData.passwordHash).not.toBe('password123');
-      expect(typeof createData.passwordHash).toBe('string');
+      expect(createData.password).not.toBe('password123');
+      expect(typeof createData.password).toBe('string');
     });
   });
 
@@ -72,7 +79,7 @@ describe('AuthService', () => {
       } as unknown as PrismaClient;
       const svc = new AuthService(prisma);
 
-      const out = await svc.login({ loginId: 'nobody', password: 'x' });
+      const out = await svc.login({ email: 'nobody@example.com', password: 'x' });
 
       expect(out).toBeNull();
     });
@@ -83,8 +90,8 @@ describe('AuthService', () => {
           create: jest.fn(),
           findUnique: jest.fn().mockResolvedValue({
             id: 'id',
-            loginId: 'a',
-            passwordHash: '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            email: 'a@example.com',
+            password: '$2a$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
             role: 'user',
             createdAt: '',
             updatedAt: '',
@@ -93,7 +100,7 @@ describe('AuthService', () => {
       } as unknown as PrismaClient;
       const svc = new AuthService(prisma);
 
-      const out = await svc.login({ loginId: 'a', password: 'wrong-password' });
+      const out = await svc.login({ email: 'a@example.com', password: 'wrong-password' });
 
       expect(out).toBeNull();
     });
@@ -101,8 +108,8 @@ describe('AuthService', () => {
     it('returns token and user when credentials match', async () => {
       type Row = {
         id: string;
-        loginId: string;
-        passwordHash: string;
+        email: string;
+        password: string;
         role: string;
         createdAt: string;
         updatedAt: string;
@@ -110,19 +117,21 @@ describe('AuthService', () => {
       let row: Row | null = null;
       const prisma = {
         user: {
-          create: jest.fn(async ({ data }: { data: { loginId: string; passwordHash: string; role: string } }) => {
-            row = {
-              id: 'stored-id',
-              loginId: data.loginId,
-              passwordHash: data.passwordHash,
-              role: data.role,
-              createdAt: 't',
-              updatedAt: 't',
-            };
-            return row;
-          }),
-          findUnique: jest.fn(async ({ where }: { where: { loginId: string } }) => {
-            if (row !== null && row.loginId === where.loginId) {
+          create: jest.fn(
+            async ({ data }: { data: { email: string; password: string; role: string } }) => {
+              row = {
+                id: 'stored-id',
+                email: data.email,
+                password: data.password,
+                role: data.role,
+                createdAt: 't',
+                updatedAt: 't',
+              };
+              return row;
+            },
+          ),
+          findUnique: jest.fn(async ({ where }: { where: { email: string } }) => {
+            if (row !== null && row.email === where.email) {
               return row;
             }
             return null;
@@ -131,14 +140,21 @@ describe('AuthService', () => {
       } as unknown as PrismaClient;
 
       const svc = new AuthService(prisma);
-      await svc.register({ loginId: 'login-ok', password: 'same-password' });
-      const out = await svc.login({ loginId: 'login-ok', password: 'same-password' });
+      await svc.register({
+        email: 'ok@example.com',
+        password: 'same-password',
+      });
+      const out = await svc.login({ email: 'ok@example.com', password: 'same-password' });
 
       expect(out).not.toBeNull();
       if (out === null) {
         return;
       }
-      expect(out.user).toEqual({ id: 'stored-id', loginId: 'login-ok', role: 'user' });
+      expect(out.user).toEqual({
+        id: 'stored-id',
+        email: 'ok@example.com',
+        role: 'user',
+      });
       const decoded = jwt.verify(out.token, SECRET) as jwt.JwtPayload;
       expect(decoded.sub).toBe('stored-id');
     });
