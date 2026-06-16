@@ -5,38 +5,35 @@ function sendValidationError(res: Response, error: z.ZodError): void {
   res.status(400).json({ error: 'Validation failed', issues: error.flatten() });
 }
 
-export function validateBody<Schema extends z.ZodType>(schema: Schema) {
+type RequestSlice = 'body' | 'query' | 'params';
+
+function createValidator<Schema extends z.ZodType>(slice: RequestSlice, schema: Schema) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    const result = schema.safeParse(req.body);
+    const raw = slice === 'body' ? req.body : slice === 'query' ? req.query : req.params;
+    const result = schema.safeParse(raw);
     if (!result.success) {
       sendValidationError(res, result.error);
       return;
     }
-    req.validatedBody = result.data;
+    if (slice === 'body') {
+      req.validatedBody = result.data;
+    } else if (slice === 'query') {
+      req.validatedQuery = result.data;
+    } else {
+      req.validatedParams = result.data;
+    }
     next();
   };
+}
+
+export function validateBody<Schema extends z.ZodType>(schema: Schema) {
+  return createValidator('body', schema);
 }
 
 export function validateQuery<Schema extends z.ZodType>(schema: Schema) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    const result = schema.safeParse(req.query);
-    if (!result.success) {
-      sendValidationError(res, result.error);
-      return;
-    }
-    req.validatedQuery = result.data;
-    next();
-  };
+  return createValidator('query', schema);
 }
 
 export function validateParams<Schema extends z.ZodType>(schema: Schema) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    const result = schema.safeParse(req.params);
-    if (!result.success) {
-      sendValidationError(res, result.error);
-      return;
-    }
-    req.validatedParams = result.data;
-    next();
-  };
+  return createValidator('params', schema);
 }

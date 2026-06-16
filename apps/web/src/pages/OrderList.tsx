@@ -61,7 +61,9 @@ export function OrderList() {
           {orders.map((o) => (
             <li key={o.id} className="order-card">
               <div className="order-header">
-                <span>{t('orders.orderId', { id: o.id.slice(0, 8) })}</span>
+                <Link to={`/orders/${o.id}`}>
+                  {t('orders.orderId', { id: o.id.slice(0, 8) })}
+                </Link>
                 <span className={`status status-${o.status}`}>
                   {StatusHelper.getStatusLabel(o.status, t)}
                 </span>

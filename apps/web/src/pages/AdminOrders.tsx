@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { api, type AdminUserRow, type Order } from '../api/client';
+import { api, type Order } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
 import { useUser } from '../context/UserContext';
 import { useAsync } from '../hooks/useAsync';
 import { StatusHelper } from '../utils/statusHelper';
 import { FormatHelper } from '../utils/formatHelper';
 
-export function Admin() {
+export function AdminOrders() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isLoggedIn, isAdmin } = useUser();
@@ -16,7 +16,7 @@ export function Admin() {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate('/login?return=/admin');
+      navigate('/login?return=/admin/orders');
       return;
     }
     if (!isAdmin) {
@@ -25,25 +25,14 @@ export function Admin() {
   }, [isAdmin, isLoggedIn, navigate]);
 
   const {
-    data: users,
-    loading: loadingUsers,
-    error: usersError,
-    refetch: refetchUsers,
-  } = useAsync<AdminUserRow[]>(
-    () => api.adminListUsers(),
-    [isAdmin],
-    { enabled: isLoggedIn && isAdmin, onError: () => t('errors.loadFailed') }
-  );
-
-  const {
     data: orders,
-    loading: loadingOrders,
-    error: ordersError,
-    refetch: refetchOrders,
+    loading,
+    error,
+    refetch,
   } = useAsync<Order[]>(
     () => api.adminListOrders(),
     [isAdmin],
-    { enabled: isLoggedIn && isAdmin, onError: () => t('errors.loadFailed') }
+    { enabled: isLoggedIn && isAdmin, onError: () => t('errors.loadFailed') },
   );
 
   const handleMarkPaid = (orderId: string) => {
@@ -52,7 +41,7 @@ export function Admin() {
     api
       .markOrderPaid(orderId)
       .then(() => {
-        refetchOrders();
+        refetch();
       })
       .catch((e) => {
         setPayError(e instanceof Error ? e.message : t('errors.markPaidFailed'));
@@ -62,71 +51,31 @@ export function Admin() {
       });
   };
 
-  const handleRefresh = () => {
-    setPayError(null);
-    refetchUsers();
-    refetchOrders();
-  };
-
   if (!isLoggedIn || !isAdmin) {
     return null;
   }
 
-  const userRows = users ?? [];
   const orderRows = orders ?? [];
 
   return (
     <div className="page admin-page">
-      <h1>{t('admin.title')}</h1>
-      <p className="admin-hint">{t('admin.accountsHint')}</p>
+      <h1>{t('admin.ordersTitle')}</h1>
 
       <div className="admin-section-header" style={{ marginBottom: 'var(--space-6)' }}>
-        <button type="button" className="button" onClick={handleRefresh}>
+        <button type="button" className="button" onClick={() => refetch()}>
           {t('admin.refresh')}
         </button>
+        <Link to="/admin" className="button secondary" style={{ marginLeft: 'var(--space-3)' }}>
+          {t('nav.admin')}
+        </Link>
       </div>
 
       {payError ? <p className="error">{payError}</p> : null}
+      {error ? <p className="error">{error}</p> : null}
+      {loading ? <p className="loading">{t('common.loading')}</p> : null}
 
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <h2>{t('admin.usersTitle')}</h2>
-        </div>
-        {usersError ? <p className="error">{usersError}</p> : null}
-        {loadingUsers ? <p className="loading">{t('common.loading')}</p> : null}
-        {!loadingUsers && !usersError ? (
-          <div className="admin-table-wrap">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>{t('admin.colEmail')}</th>
-                  <th>{t('admin.colRole')}</th>
-                  <th>{t('admin.colId')}</th>
-                  <th>{t('admin.colCreated')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userRows.map((u) => (
-                  <tr key={u.id}>
-                    <td className="mono">{u.email}</td>
-                    <td>{u.role}</td>
-                    <td className="mono">{u.id.slice(0, 8)}…</td>
-                    <td className="mono">{u.createdAt.slice(0, 10)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : null}
-      </section>
-
-      <section className="admin-section">
-        <div className="admin-section-header">
-          <h2>{t('admin.ordersTitle')}</h2>
-        </div>
-        {ordersError ? <p className="error">{ordersError}</p> : null}
-        {loadingOrders ? <p className="loading">{t('common.loading')}</p> : null}
-        {!loadingOrders && !ordersError ? (
+      {!loading && !error ? (
+        <section className="admin-section">
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
@@ -172,8 +121,8 @@ export function Admin() {
               </tbody>
             </table>
           </div>
-        ) : null}
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }

@@ -6,6 +6,8 @@
     "favorites": "Избранное",
     "profile": "Профиль",
     "admin": "Админ",
+    "orders": "Мои заказы",
+    "allOrders": "Все заказы",
     "logout": "Выйти",
     "login": "Войти"
   },
@@ -163,6 +165,22 @@
     "markPaid": "Отметить оплаченным",
     "markPaidProgress": "…",
     "backToOrders": "← Заказы"
+  },
+  "orderDetail": {
+    "title": "Детали заказа",
+    "notFound": "Заказ не найден",
+    "orderIdLabel": "ID заказа",
+    "customerIdLabel": "ID клиента",
+    "statusLabel": "Статус",
+    "currencyLabel": "Валюта",
+    "createdAtLabel": "Создан",
+    "updatedAtLabel": "Обновлён",
+    "totalLabel": "Итого",
+    "itemsHeading": "Товары",
+    "colItem": "Товар",
+    "colUnitPrice": "Цена",
+    "colQty": "Кол-во",
+    "colLineTotal": "Сумма"
   },
   "orderCreate": {
     "title": "Создать заказ",

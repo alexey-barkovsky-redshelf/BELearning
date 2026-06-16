@@ -11,7 +11,9 @@ import { Favorites } from './pages/Favorites';
 import { Login } from './pages/Login';
 import { OrderList } from './pages/OrderList';
 import { OrderCreate } from './pages/OrderCreate';
+import { OrderDetail } from './pages/OrderDetail';
 import { Admin } from './pages/Admin';
+import { AdminOrders } from './pages/AdminOrders';
 
 export function App() {
   return (
@@ -27,8 +29,10 @@ export function App() {
             <Route path="checkout" element={<Checkout />} />
             <Route path="orders" element={<OrderList />} />
             <Route path="orders/new" element={<OrderCreate />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
             <Route path="login" element={<Login />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="admin/orders" element={<AdminOrders />} />
             <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>

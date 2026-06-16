@@ -37,9 +37,27 @@ export function Layout() {
             {t('nav.cart')}
             {totalCount > 0 ? <span className="cart-badge">{totalCount}</span> : null}
           </NavLink>
+          {isLoggedIn ? (
+            <NavLink
+              to="/orders"
+              end
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              {t('nav.orders')}
+            </NavLink>
+          ) : null}
+          {isAdmin ? (
+            <NavLink
+              to="/admin/orders"
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            >
+              {t('nav.allOrders')}
+            </NavLink>
+          ) : null}
           {isAdmin ? (
             <NavLink
               to="/admin"
+              end
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             >
               {t('nav.admin')}

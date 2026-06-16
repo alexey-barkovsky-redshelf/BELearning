@@ -6,6 +6,8 @@
     "favorites": "Favorites",
     "profile": "Profile",
     "admin": "Admin",
+    "orders": "My orders",
+    "allOrders": "All orders",
     "logout": "Log out",
     "login": "Log in"
   },
@@ -163,6 +165,22 @@
     "markPaid": "Mark paid",
     "markPaidProgress": "…",
     "backToOrders": "← Orders"
+  },
+  "orderDetail": {
+    "title": "Order details",
+    "notFound": "Order not found",
+    "orderIdLabel": "Order ID",
+    "customerIdLabel": "Customer ID",
+    "statusLabel": "Status",
+    "currencyLabel": "Currency",
+    "createdAtLabel": "Placed",
+    "updatedAtLabel": "Last updated",
+    "totalLabel": "Total",
+    "itemsHeading": "Items",
+    "colItem": "Item",
+    "colUnitPrice": "Unit price",
+    "colQty": "Qty",
+    "colLineTotal": "Line total"
   },
   "orderCreate": {
     "title": "Create order",
