@@ -1,15 +1,62 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { parseStoredUserSessionJson, type StoredUserSession } from '@belearning/shared';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { SESSION_STORAGE_KEY } from '../constants/sessionStorage';
 
-const UserContext = createContext<{ userId: string; setUserId: (v: string) => void; isLoggedIn: boolean } | null>(null);
+export type UserSession = StoredUserSession;
+
+function readStoredUserSession(): UserSession | null {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  const json = localStorage.getItem(SESSION_STORAGE_KEY);
+  if (json === null || json.length === 0) {
+    return null;
+  }
+  return parseStoredUserSessionJson(json);
+}
+
+type UserContextValue = {
+  session: UserSession | null;
+  setSession: (s: UserSession | null) => void;
+  userId: string;
+  email: string;
+  role: string;
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+};
+
+const UserContext = createContext<UserContextValue | null>(null);
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [userId, setUserId] = useState('');
-  const isLoggedIn = userId.trim().length > 0;
-  return (
-    <UserContext.Provider value={{ userId, setUserId, isLoggedIn }}>
-      {children}
-    </UserContext.Provider>
-  );
+  const [session, setSessionState] = useState<UserSession | null>(() => readStoredUserSession());
+
+  const setSession = (s: UserSession | null) => {
+    setSessionState(s);
+    if (typeof localStorage !== 'undefined') {
+      if (s === null) {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+      } else {
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(s));
+      }
+    }
+  };
+
+  const value = useMemo((): UserContextValue => {
+    const userId = session?.userId ?? '';
+    const email = session?.email ?? '';
+    const role = session?.role ?? '';
+    return {
+      session,
+      setSession,
+      userId,
+      email,
+      role,
+      isLoggedIn: session !== null,
+      isAdmin: role === 'admin',
+    };
+  }, [session]);
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 
 export function useUser() {

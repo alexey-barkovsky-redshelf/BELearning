@@ -32,9 +32,39 @@ packages/
 
 ```bash
 yarn install
+cp apps/api/.env.template apps/api/.env
 yarn workspace @belearning/shared build
 yarn workspace @belearning/utils build
+yarn db:generate
+yarn db:migrate
+yarn db:seed
 ```
+
+If your local SQLite file was created under an old migration history, reset and reapply:
+
+```bash
+rm -f apps/api/prisma/dev.db
+yarn db:migrate
+yarn db:seed
+```
+
+To sync the schema without using migration files (not recommended for production), use `yarn db:push` instead of `yarn db:migrate`.
+
+## Run locally
+
+```bash
+yarn dev:api   # http://localhost:3000
+yarn dev:web   # http://localhost:5173 — proxies /api to the API
+```
+
+## Demo accounts (seeded)
+
+Sign in with **email + password** (see the Log in page in the web app). These users are created by `yarn db:seed` (and on API startup when seeding is enabled).
+
+| Email | Password | Role |
+|-------|----------|------|
+| `demo@seed.local` | `demo` | user |
+| `admin@seed.local` | `admin` | admin |
 
 ## Scripts
 
@@ -42,9 +72,11 @@ yarn workspace @belearning/utils build
 |--------|-------------|
 | `yarn dev:api` | API (http://localhost:3000) |
 | `yarn dev:web` | Web (http://localhost:5173) |
+| `yarn db:push` | `prisma db push` in API (sync schema to SQLite without migrations) |
 | `yarn build` | Build all |
 | `yarn lint` | Lint |
+| `yarn test:api` | API Jest tests (includes JWT secret, `requireAuth` / `requireRole`, `AuthService`) |
 
 Web proxies `/api` to the API (`apps/web/vite.config.ts`).
 
-**Web UI** — Products list and detail, create order (with User ID + cart), list orders and mark paid. Run `yarn dev:web` and open http://localhost:5173. Use any User ID (e.g. `user-1`) for Orders.
+**Web UI** — Products, cart, checkout (JWT auth), orders, admin panel for **`admin@seed.local`**. Run `yarn dev:web` and open http://localhost:5173.

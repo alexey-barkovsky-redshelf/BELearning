@@ -9,7 +9,6 @@ export const orderItemInputSchema = z.object({
 });
 
 export const createOrderBodySchema = z.object({
-  userId: nonEmptyString,
   items: z.array(orderItemInputSchema).min(1),
   currency: nonEmptyString.optional(),
 });

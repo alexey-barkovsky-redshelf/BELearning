@@ -1,1 +1,1 @@
-export { seedMockData, type SeedMockDataResult } from './seed.js';
+export { seedDemoUsers, seedMockData, type SeedMockDataResult } from './seed.js';

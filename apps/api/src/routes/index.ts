@@ -8,10 +8,14 @@ import { OrderService } from '../modules/order/Services/index.js';
 import { ProductController } from '../modules/product/Controllers/index.js';
 import { CategoryController } from '../modules/category/Controllers/index.js';
 import { OrderController } from '../modules/order/Controllers/index.js';
-import { seedMockData } from '../infrastructure/index.js';
+import { AuthController } from '../auth/authController.js';
+import { AuthService } from '../auth/authService.js';
+import { createAuthRoutes } from '../auth/authRoutes.js';
+import { seedDemoUsers, seedMockData } from '../infrastructure/index.js';
 import { createHealthRoutes } from '../modules/health/Routes/index.js';
 import { createProductRoutes } from '../modules/product/Routes/index.js';
 import { createCategoryRoutes } from '../modules/category/Routes/index.js';
+import { AdminController, createAdminRoutes } from '../modules/admin/index.js';
 import { createOrderRoutes } from '../modules/order/Routes/index.js';
 
 export class AppRouter {
@@ -25,6 +29,7 @@ export class AppRouter {
     const seedOnStartup = nodeEnv !== 'production' || process.env.SEED_MOCK_DATA === 'true';
     if (seedOnStartup) {
       await seedMockData(productRepository);
+      await seedDemoUsers(prisma);
     } else {
       console.info(
         '[seed] skipped in production (set SEED_MOCK_DATA=true or run yarn workspace @belearning/api db:seed)',
@@ -39,7 +44,12 @@ export class AppRouter {
     const categoryController = new CategoryController(categoryService);
     const orderController = new OrderController(orderService);
 
+    const authController = new AuthController(new AuthService(prisma));
+    const adminController = new AdminController(prisma, orderService);
+
     root.use('/health', createHealthRoutes());
+    root.use('/auth', createAuthRoutes(authController));
+    root.use('/admin', createAdminRoutes(adminController));
     root.use('/categories', createCategoryRoutes(categoryController));
     root.use('/products', createProductRoutes(productController));
     root.use('/orders', createOrderRoutes(orderController));

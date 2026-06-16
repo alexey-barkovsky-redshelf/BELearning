@@ -11,7 +11,7 @@ import { FormatHelper } from '../utils/formatHelper';
 export function Checkout() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userId, isLoggedIn } = useUser();
+  const { isLoggedIn } = useUser();
   const { items, clear, totalSum } = useCart();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export function Checkout() {
     setSubmitting(true);
     setError(null);
     api
-      .createOrder({ userId, items, currency })
+      .createOrder({ items, currency })
       .then(() => {
         clear();
         navigate('/profile?thanks=1');

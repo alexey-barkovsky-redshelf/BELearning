@@ -4,7 +4,26 @@
     "catalog": "Catalog",
     "cart": "Cart",
     "favorites": "Favorites",
-    "profile": "Profile"
+    "profile": "Profile",
+    "admin": "Admin",
+    "logout": "Log out",
+    "login": "Log in"
+  },
+  "admin": {
+    "title": "Admin panel",
+    "accountsHint": "Seeded accounts: admin@seed.local / admin and demo@seed.local / demo. Anyone can create more users via Log in → Sign up (always role user). To add another admin, set role to admin in the database or extend the API.",
+    "refresh": "Refresh data",
+    "usersTitle": "Users",
+    "ordersTitle": "All orders",
+    "colEmail": "Email",
+    "colRole": "Role",
+    "colId": "User id",
+    "colCreated": "Created",
+    "colOrder": "Order",
+    "colOrderUser": "Customer id",
+    "colStatus": "Status",
+    "colTotal": "Total",
+    "colActions": "Actions"
   },
   "favorites": {
     "title": "Favorites",
@@ -78,12 +97,18 @@
     "title": "Log in",
     "signIn": "Log in",
     "signUp": "Sign up",
-    "signUpHint": "Choose a User ID to use. You can use any identifier (e.g. email or nickname).",
-    "userIdLabel": "User ID",
-    "userIdPlaceholder": "Enter your User ID",
+    "signUpHint": "Use your email and a password. New accounts are regular users.",
+    "demoHint": "Demo: demo@seed.local / demo (user) or admin@seed.local / admin (admin).",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
     "submit": "Log in",
-    "submitSignUp": "Create",
-    "errorRequired": "User ID is required."
+    "submitSignUp": "Create account",
+    "submitting": "Please wait…",
+    "errorEmailRequired": "Email is required.",
+    "errorPasswordRequired": "Password is required.",
+    "errorGeneric": "Something went wrong."
   },
   "profile": {
     "title": "Profile",
@@ -130,8 +155,7 @@
   },
   "orders": {
     "title": "Orders",
-    "userIdLabel": "User ID (for demo):",
-    "loadOrders": "Load my orders",
+    "loginToView": "Log in to view your orders.",
     "createNew": "Create a new order",
     "empty": "No orders yet.",
     "orderId": "Order {{id}}…",

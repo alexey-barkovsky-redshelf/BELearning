@@ -9,7 +9,7 @@ function InnerProviders({ children }: { children: ReactNode }) {
   return (
     <FavoritesProvider userId={userId}>
       <CurrencyProvider>
-        <CartProvider>
+        <CartProvider userId={userId}>
           {children}
         </CartProvider>
       </CurrencyProvider>

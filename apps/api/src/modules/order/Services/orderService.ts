@@ -30,6 +30,10 @@ export class OrderService extends BaseEntityService<Order, IOrder, IOrderReposit
     return this.toPlains(await this.repository.findByUserId(userId));
   }
 
+  public async findAll(): Promise<IOrder[]> {
+    return this.toPlains(await this.repository.findAll());
+  }
+
   public async markPaid(orderId: string): Promise<IOrder | null> {
     const order = await this.repository.findById(orderId);
     if (!order) {

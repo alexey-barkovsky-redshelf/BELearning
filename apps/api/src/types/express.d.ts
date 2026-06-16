@@ -4,6 +4,7 @@ declare global {
       validatedBody?: unknown;
       validatedQuery?: unknown;
       validatedParams?: unknown;
+      auth?: { userId: string; email: string; role: string };
     }
   }
 }

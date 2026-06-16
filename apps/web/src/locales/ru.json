@@ -4,7 +4,26 @@
     "catalog": "Каталог",
     "cart": "Корзина",
     "favorites": "Избранное",
-    "profile": "Профиль"
+    "profile": "Профиль",
+    "admin": "Админ",
+    "logout": "Выйти",
+    "login": "Войти"
+  },
+  "admin": {
+    "title": "Админ-панель",
+    "accountsHint": "Учётки из сида: admin@seed.local / admin и demo@seed.local / demo. Новых обычных пользователей создаёт регистрация на экране входа (роль всегда user). Ещё одного админа можно добавить в БД (поле role = admin) или отдельным API.",
+    "refresh": "Обновить",
+    "usersTitle": "Пользователи",
+    "ordersTitle": "Все заказы",
+    "colEmail": "Email",
+    "colRole": "Роль",
+    "colId": "Id пользователя",
+    "colCreated": "Создан",
+    "colOrder": "Заказ",
+    "colOrderUser": "Id клиента",
+    "colStatus": "Статус",
+    "colTotal": "Сумма",
+    "colActions": "Действия"
   },
   "favorites": {
     "title": "Избранное",
@@ -78,12 +97,18 @@
     "title": "Вход",
     "signIn": "Войти",
     "signUp": "Регистрация",
-    "signUpHint": "Выберите User ID для использования. Можно любой идентификатор (например, email или ник).",
-    "userIdLabel": "User ID",
-    "userIdPlaceholder": "Введите User ID",
+    "signUpHint": "Укажите email и пароль. Новые аккаунты — обычные пользователи.",
+    "demoHint": "Демо: demo@seed.local / demo (user) или admin@seed.local / admin (admin).",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Пароль",
+    "passwordPlaceholder": "Пароль",
     "submit": "Войти",
-    "submitSignUp": "Создать",
-    "errorRequired": "Укажите User ID."
+    "submitSignUp": "Создать аккаунт",
+    "submitting": "Подождите…",
+    "errorEmailRequired": "Укажите email.",
+    "errorPasswordRequired": "Укажите пароль.",
+    "errorGeneric": "Что-то пошло не так."
   },
   "profile": {
     "title": "Профиль",
@@ -130,8 +155,7 @@
   },
   "orders": {
     "title": "Заказы",
-    "userIdLabel": "User ID (для демо):",
-    "loadOrders": "Загрузить заказы",
+    "loginToView": "Войдите, чтобы видеть свои заказы.",
     "createNew": "Создать новый заказ",
     "empty": "Пока нет заказов.",
     "orderId": "Заказ {{id}}…",

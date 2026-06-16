@@ -10,6 +10,7 @@ import {
   type ProductCategoryCode,
 } from '@belearning/shared';
 import { PRODUCT_CATEGORY_CODES } from '@belearning/utils';
+import { getAuthToken } from './authHeader';
 
 const BASE = (import.meta as { env?: { VITE_API_BASE?: string } }).env?.VITE_API_BASE ?? '/api';
 
@@ -18,9 +19,30 @@ export interface ApiErrorPayload {
   code?: string;
 }
 
+export type AuthUser = {
+  id: string;
+  email: string;
+  role: string;
+};
+
+export type AuthResponse = {
+  token: string;
+  user: AuthUser;
+};
+
+export type AdminUserRow = {
+  id: string;
+  email: string;
+  role: string;
+  createdAt: string;
+};
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getAuthToken();
+  const authHeaders: Record<string, string> =
+    token !== null && token.length > 0 ? { Authorization: `Bearer ${token}` } : {};
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/json', ...authHeaders, ...options?.headers },
     ...options,
   });
   if (!res.ok) {
@@ -85,12 +107,21 @@ export const api = {
   getProduct: (id: string) => request<Product>(`/products/${id}`),
   getProductBySlug: (slug: string) => request<Product>(`/products/slug/${slug}`),
 
-  createOrder: (body: { userId: string; items: OrderItem[]; currency?: string }) =>
+  login: (body: { email: string; password: string }) =>
+    request<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(body) }),
+  register: (body: { email: string; password: string }) =>
+    request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify(body) }),
+
+  createOrder: (body: { items: OrderItem[]; currency?: string }) =>
     request<Order>('/orders', {
       method: 'POST',
       body: JSON.stringify({ ...body, currency: body.currency ?? 'USD' }),
     }),
   getOrder: (id: string) => request<Order>(`/orders/${id}`),
+  getMyOrders: () => request<Order[]>('/orders/me'),
   getOrdersByUser: (userId: string) => request<Order[]>(`/orders/user/${userId}`),
   markOrderPaid: (id: string) => request<Order>(`/orders/${id}/paid`, { method: 'POST' }),
+
+  adminListUsers: () => request<AdminUserRow[]>('/admin/users'),
+  adminListOrders: () => request<Order[]>('/admin/orders'),
 };

@@ -3,6 +3,10 @@ export type { PaginatedProducts, Product, ProductCategoryCode } from './types/pr
 export type { Order, OrderItem, OrderStatus } from './types/order';
 export type { Category } from './types/category';
 export { idParamSchema, isEmptyQueryInput, nonEmptyString } from './schemas/common';
+export { loginBodySchema, registerBodySchema } from './schemas/auth';
+export type { LoginBody, RegisterBody } from './schemas/auth';
+export { parseStoredUserSessionJson } from './schemas/session';
+export type { StoredUserSession } from './schemas/session';
 export {
   createOrderBodySchema,
   orderIdParamSchema,

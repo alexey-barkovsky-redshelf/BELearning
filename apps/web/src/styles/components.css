@@ -1498,3 +1498,67 @@ a.button-secondary:hover {
 .favorites-item-remove {
   flex-shrink: 0;
 }
+
+.admin-hint {
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  border-radius: var(--radius-md, 8px);
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-surface-alt, var(--color-surface));
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+.admin-hint code {
+  font-size: 0.95em;
+}
+
+.admin-section {
+  margin-bottom: var(--space-10);
+}
+
+.admin-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md, 8px);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.admin-table th {
+  font-weight: var(--font-weight-semibold);
+  background: var(--color-surface);
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table .mono {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+.admin-table-muted {
+  color: var(--color-text-muted);
+}

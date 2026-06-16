@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api, type Product, type OrderItem } from '../api/client';
 import { useUser } from '../context/UserContext';
 import { useTranslation } from '../context/LocaleContext';
@@ -10,7 +10,7 @@ import { FormatHelper } from '../utils/formatHelper';
 export function OrderCreate() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userId, setUserId } = useUser();
+  const { isLoggedIn } = useUser();
   const { currency } = useCurrency();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<OrderItem[]>([]);
@@ -42,8 +42,8 @@ export function OrderCreate() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId.trim()) {
-      setError(t('errors.enterUserId'));
+    if (!isLoggedIn) {
+      setError(t('orders.loginToView'));
       return;
     }
     if (cart.length === 0) {
@@ -53,7 +53,7 @@ export function OrderCreate() {
     setSubmitting(true);
     setError(null);
     api
-      .createOrder({ userId, items: cart, currency })
+      .createOrder({ items: cart, currency })
       .then(() => {
         navigate('/orders');
         setCart([]);
@@ -66,22 +66,20 @@ export function OrderCreate() {
       });
   };
 
+  if (!isLoggedIn) {
+    return (
+      <PageShell title={t('orderCreate.title')} backTo={{ to: '/orders', label: t('orders.backToOrders') }}>
+        <p>{t('orders.loginToView')}</p>
+        <Link to="/login?return=/orders/new" className="button">
+          {t('checkout.login')}
+        </Link>
+      </PageShell>
+    );
+  }
+
   return (
     <PageShell title={t('orderCreate.title')} backTo={{ to: '/orders', label: t('orders.backToOrders') }}>
       <form onSubmit={handleSubmit} className="order-form">
-        <label>
-          {t('orderCreate.userId')}
-          <input
-            type="text"
-            value={userId}
-            onChange={(e) => {
-              setUserId(e.target.value);
-            }}
-            placeholder={t('common.userIdPlaceholder')}
-            required
-          />
-        </label>
-
         <h2>{t('orderCreate.productsHeading')}</h2>
         <ul className="product-list compact">
           {products.map((p) => {
