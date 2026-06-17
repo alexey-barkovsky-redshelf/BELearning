@@ -11,4 +11,9 @@ export class CategoryController extends BaseController {
     const list = await this.categoryService.list();
     res.json(list);
   }
+
+  public async tree(_req: Request, res: Response): Promise<void> {
+    const tree = await this.categoryService.getTree();
+    res.json(tree);
+  }
 }

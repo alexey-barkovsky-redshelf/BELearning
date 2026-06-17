@@ -17,29 +17,71 @@ model User {
 }
 
 model Product {
-  id            String            @id @default(uuid())
-  name          String
-  slug          String            @unique
-  description   String?
-  price         Float
-  currency      String            @default("USD")
-  manufacturer  String?
-  createdAt     String
-  updatedAt     String
-  categoryRows  ProductCategory[]
+  id             String              @id @default(uuid())
+  name           String
+  slug           String              @unique
+  description    String?
+  price          Float
+  currency       String              @default("USD")
+  manufacturer   String?
+  createdAt      String
+  updatedAt      String
+  categoryRows   ProductCategory[]
+  promotionRows  PromotionProduct[]
 
   @@index([name])
   @@index([price])
   @@index([createdAt])
 }
 
+model Category {
+  code         String            @id
+  name         String
+  parentCode   String?
+  parent       Category?         @relation("CategoryHierarchy", fields: [parentCode], references: [code], onDelete: SetNull)
+  children     Category[]        @relation("CategoryHierarchy")
+  createdAt    String
+  updatedAt    String
+  productRows  ProductCategory[]
+
+  @@index([parentCode])
+}
+
 model ProductCategory {
   productId String
   code      String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category  Category @relation(fields: [code], references: [code], onDelete: Cascade)
 
   @@id([productId, code])
   @@index([code])
+}
+
+model Promotion {
+  id            String             @id @default(uuid())
+  name          String
+  description   String?
+  discountPct   Float
+  validFrom     String
+  validTo       String
+  isActive      Boolean            @default(true)
+  createdAt     String
+  updatedAt     String
+  productRows   PromotionProduct[]
+
+  @@index([validFrom, validTo])
+  @@index([isActive])
+}
+
+model PromotionProduct {
+  promotionId         String
+  productId           String
+  discountPctOverride Float?
+  promotion           Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  product             Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([promotionId, productId])
+  @@index([productId])
 }
 
 model Order {
@@ -50,6 +92,9 @@ model Order {
   createdAt String
   updatedAt String
   items     OrderItem[]
+
+  @@index([userId])
+  @@index([status, createdAt])
 }
 
 model OrderItem {
@@ -60,4 +105,7 @@ model OrderItem {
   productTitle     String
   priceAtPurchase  Float
   quantity         Int
+
+  @@index([orderId])
+  @@index([productId])
 }
