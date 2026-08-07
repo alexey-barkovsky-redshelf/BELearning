@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import type { Order as IOrder } from '@belearning/shared';
 import { BaseEntityService } from '../../../shared/services/index.js';
 import { Order } from '../Models/index.js';
@@ -15,7 +16,7 @@ export class OrderService extends BaseEntityService<Order, IOrder, IOrderReposit
   ): Promise<IOrder> {
     const now = new Date().toISOString();
     const order = Order.create({
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       userId,
       items,
       currency: currency ?? 'USD',

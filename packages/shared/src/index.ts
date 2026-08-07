@@ -1,7 +1,8 @@
 export type { User } from './types/user';
 export type { PaginatedProducts, Product, ProductCategoryCode } from './types/product';
 export type { Order, OrderItem, OrderStatus } from './types/order';
-export type { Category } from './types/category';
+export type { Category, CategoryNode } from './types/category';
+export type { Promotion, PromotionProduct } from './types/promotion';
 export { idParamSchema, isEmptyQueryInput, nonEmptyString } from './schemas/common';
 export { loginBodySchema, registerBodySchema } from './schemas/auth';
 export type { LoginBody, RegisterBody } from './schemas/auth';

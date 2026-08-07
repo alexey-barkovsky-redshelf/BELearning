@@ -1,16 +1,17 @@
 import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { jwtAuthConfig } from '../../auth/jwtConfig.js';
+import type { AuthContext } from '../../types/authContext.js';
 
-export type AuthContext = {
-  userId: string;
-  email: string;
-  role: string;
-};
+export type { AuthContext };
+
+export function getAuthFromRequest(req: Request): AuthContext {
+  return req.auth as AuthContext;
+}
 
 function readBearerToken(req: Request): string | null {
   const raw = req.headers.authorization;
-  if (raw === undefined || typeof raw !== 'string' || !raw.startsWith('Bearer ')) {
+  if (typeof raw !== 'string' || !raw.startsWith('Bearer ')) {
     return null;
   }
   const t = raw.slice(7).trim();

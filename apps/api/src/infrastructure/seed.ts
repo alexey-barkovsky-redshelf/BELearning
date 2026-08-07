@@ -2,8 +2,12 @@ import { PRODUCT_CATEGORY, PRODUCT_CATEGORY_CODES } from '@belearning/utils';
 import type { PrismaClient } from '@prisma/client';
 import type { ProductCategoryCode } from '@belearning/shared';
 import bcrypt from 'bcryptjs';
+import { Category } from '../modules/category/Models/index.js';
+import type { ICategoryRepository } from '../modules/category/Types/index.js';
 import { Product } from '../modules/product/Models/index.js';
 import type { IProductRepository } from '../modules/product/Types/index.js';
+import { Promotion } from '../modules/promotion/Models/index.js';
+import type { IPromotionRepository } from '../modules/promotion/Types/index.js';
 
 const BULK_PER_CATEGORY = 50;
 
@@ -186,6 +190,98 @@ export async function seedMockData(productRepository: IProductRepository): Promi
 
   console.info(`[seed] mock products: inserted ${inserted} (chunk size ${chunk})`);
   return { inserted };
+}
+
+export async function seedCategories(repository: ICategoryRepository): Promise<void> {
+  const t = now();
+  const categories = PRODUCT_CATEGORY_CODES.map((code) =>
+    Category.create({
+      code,
+      name: categoryLabel(code),
+      createdAt: t,
+      updatedAt: t,
+    }),
+  );
+  await repository.upsertMany(categories);
+  console.info(`[seed] categories: upserted ${categories.length}`);
+}
+
+function isoDaysFromNow(days: number): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString();
+}
+
+const PROMOTION_FIXTURES = [
+  {
+    id: 'seed-promo-summer-sale',
+    name: 'Summer Sale',
+    description: 'Seasonal discount on selected products.',
+    discountPct: 20,
+    validFrom: -7,
+    validTo: 30,
+    isActive: true,
+    productSlugPrefixes: ['sport-sample-', 'for-men-sample-'],
+    productSlugTake: 4,
+  },
+  {
+    id: 'seed-promo-health-boost',
+    name: 'Health Boost',
+    description: 'Discount on health products.',
+    discountPct: 10,
+    validFrom: -2,
+    validTo: 14,
+    isActive: true,
+    productSlugPrefixes: ['health-sample-'],
+    productSlugTake: 3,
+  },
+  {
+    id: 'seed-promo-spring-expired',
+    name: 'Spring Sale (expired)',
+    description: 'Used to demo a promotion outside its validity window.',
+    discountPct: 15,
+    validFrom: -60,
+    validTo: -30,
+    isActive: true,
+    productSlugPrefixes: ['hobby-sample-'],
+    productSlugTake: 2,
+  },
+];
+
+export async function seedPromotions(
+  promotionRepository: IPromotionRepository,
+  productRepository: IProductRepository,
+): Promise<void> {
+  const t = now();
+  const allProducts = await productRepository.findAll();
+  let createdOrUpdated = 0;
+  for (const fixture of PROMOTION_FIXTURES) {
+    const matchingProducts = allProducts
+      .filter((p) => fixture.productSlugPrefixes.some((prefix) => p.slug.startsWith(prefix)))
+      .slice(0, fixture.productSlugTake)
+      .map((p) => ({ productId: p.id, discountPctOverride: null }));
+
+    if (matchingProducts.length === 0) {
+      continue;
+    }
+
+    const promotion = Promotion.create({
+      id: fixture.id,
+      name: fixture.name,
+      description: fixture.description,
+      discountPct: fixture.discountPct,
+      validFrom: isoDaysFromNow(fixture.validFrom),
+      validTo: isoDaysFromNow(fixture.validTo),
+      isActive: fixture.isActive,
+      products: matchingProducts,
+      createdAt: t,
+      updatedAt: t,
+    });
+    await promotionRepository.save(promotion);
+    createdOrUpdated += 1;
+  }
+
+  console.info(`[seed] promotions: upserted ${createdOrUpdated}`);
 }
 
 export async function seedDemoUsers(prisma: PrismaClient): Promise<void> {

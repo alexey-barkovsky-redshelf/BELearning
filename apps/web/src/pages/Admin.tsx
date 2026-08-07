@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api, type AdminUserRow, type Order } from '../api/client';
 import { useTranslation } from '../context/LocaleContext';
 import { useUser } from '../context/UserContext';
@@ -141,7 +141,9 @@ export function Admin() {
               <tbody>
                 {orderRows.map((o) => (
                   <tr key={o.id}>
-                    <td className="mono">{o.id.slice(0, 8)}…</td>
+                    <td className="mono">
+                      <Link to={`/orders/${o.id}`}>{o.id.slice(0, 8)}…</Link>
+                    </td>
                     <td className="mono">{o.userId.slice(0, 8)}…</td>
                     <td>
                       <span className={`status status-${o.status}`}>

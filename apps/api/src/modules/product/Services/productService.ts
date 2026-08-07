@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import type { ListProductsQuery, PaginatedProducts, Product as IProduct } from '@belearning/shared';
 import { BaseEntityService } from '../../../shared/services/index.js';
 import { Product } from '../Models/index.js';
@@ -28,7 +29,7 @@ export class ProductService extends BaseEntityService<Product, IProduct, IProduc
   public async create(data: Omit<IProduct, 'id' | 'createdAt' | 'updatedAt'>): Promise<IProduct> {
     const now = new Date().toISOString();
     const product = Product.create({
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name: data.name,
       slug: data.slug,
       price: data.price,

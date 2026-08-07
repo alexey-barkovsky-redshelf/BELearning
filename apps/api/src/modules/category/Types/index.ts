@@ -1,1 +1,1 @@
-export type { Category } from './categoryTypes.js';
+export type { Category, ICategoryRepository } from './categoryTypes.js';
